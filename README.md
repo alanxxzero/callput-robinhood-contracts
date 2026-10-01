@@ -106,26 +106,26 @@ account addresses are created through the factory.
 | --- | --- | --- |
 | OptionsMarket | [`0x3271d35afAc70C0D4989F984Abb2d918bf672C7e`](https://robinhoodchain.blockscout.com/address/0x3271d35afAc70C0D4989F984Abb2d918bf672C7e) | [impl](https://robinhoodchain.blockscout.com/address/0x100291F9Fc52CE39e177DfD6d4bC72aDF906A1d9#code) |
 | Controller | [`0x0D240c1EbEeE7F74B40d6611326f5df98AB00e1B`](https://robinhoodchain.blockscout.com/address/0x0D240c1EbEeE7F74B40d6611326f5df98AB00e1B) | [impl](https://robinhoodchain.blockscout.com/address/0x66C1F85b71eCA648E27B860213676f9116f5eE9A#code) |
-| PositionManager | [`0x426a6b482893557E58cF38de635fEbB30Fd6a3C3`](https://robinhoodchain.blockscout.com/address/0x426a6b482893557E58cF38de635fEbB30Fd6a3C3) | [impl](https://repo.sourcify.dev/4663/0x9D83c9f0581a695c5D1fbD7B41EB8ddc5143246D) |
+| PositionManager | [`0x426a6b482893557E58cF38de635fEbB30Fd6a3C3`](https://robinhoodchain.blockscout.com/address/0x426a6b482893557E58cF38de635fEbB30Fd6a3C3) | [impl](https://robinhoodchain.blockscout.com/address/0x9D83c9f0581a695c5D1fbD7B41EB8ddc5143246D#code) |
 | SettleManager | [`0xd328D581f3Fb1Ca86D28D573bA1f17409e5112EF`](https://robinhoodchain.blockscout.com/address/0xd328D581f3Fb1Ca86D28D573bA1f17409e5112EF) | [impl](https://robinhoodchain.blockscout.com/address/0x7B968a70467C1dc0553B84E0Fd7ef25c7B357A25#code) |
 | OptionsAuthority | [`0x85e00a193d5E340339484336dd9EA09f942A0b7B`](https://robinhoodchain.blockscout.com/address/0x85e00a193d5E340339484336dd9EA09f942A0b7B) | [impl](https://robinhoodchain.blockscout.com/address/0x8B4290fffB0700ee1618BBbA88299449E92fD022#code) |
-| ViewAggregator | [`0xf277D41cc8093667bf1A023f4FBbeB8328900bb7`](https://robinhoodchain.blockscout.com/address/0xf277D41cc8093667bf1A023f4FBbeB8328900bb7) | [impl](https://repo.sourcify.dev/4663/0x3E52762fAE476de0F70fE241f188dbAE0c90C2c8) |
+| ViewAggregator | [`0xf277D41cc8093667bf1A023f4FBbeB8328900bb7`](https://robinhoodchain.blockscout.com/address/0xf277D41cc8093667bf1A023f4FBbeB8328900bb7) | [impl](https://robinhoodchain.blockscout.com/address/0x3E52762fAE476de0F70fE241f188dbAE0c90C2c8#code) |
 | Referral | [`0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9`](https://robinhoodchain.blockscout.com/address/0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9) | [impl](https://robinhoodchain.blockscout.com/address/0x51B48222a31413F1FD58C18Aa13b51c35020cB9c#code) |
-| FeeDistributor | [`0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41`](https://robinhoodchain.blockscout.com/address/0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41) | [impl](https://repo.sourcify.dev/4663/0x9D441286DCf5e6aaE87706d88bc6Fa772D18847F) |
+| FeeDistributor | [`0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41`](https://robinhoodchain.blockscout.com/address/0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41) | [impl](https://robinhoodchain.blockscout.com/address/0x9D441286DCf5e6aaE87706d88bc6Fa772D18847F#code) |
 
 ### Liquidity pools
 
 | Contract | Address (explorer) | Implementation |
 | --- | --- | --- |
-| Vault — S | [`0x21bA39e9394657A6196f6948C2701D9fD9612289`](https://robinhoodchain.blockscout.com/address/0x21bA39e9394657A6196f6948C2701D9fD9612289) | [impl](https://repo.sourcify.dev/4663/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d) |
-| Vault — M | [`0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE`](https://robinhoodchain.blockscout.com/address/0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE) | [impl](https://repo.sourcify.dev/4663/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d) |
-| Vault — L | [`0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897`](https://robinhoodchain.blockscout.com/address/0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897) | [impl](https://repo.sourcify.dev/4663/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d) |
-| VaultUtils — S | [`0xfB970601A11254bA465fE52eC88546299E1E002c`](https://robinhoodchain.blockscout.com/address/0xfB970601A11254bA465fE52eC88546299E1E002c) | [impl](https://repo.sourcify.dev/4663/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7) |
-| VaultUtils — M | [`0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066`](https://robinhoodchain.blockscout.com/address/0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066) | [impl](https://repo.sourcify.dev/4663/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7) |
-| VaultUtils — L | [`0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573`](https://robinhoodchain.blockscout.com/address/0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573) | [impl](https://repo.sourcify.dev/4663/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7) |
-| OlpManager — S | [`0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8`](https://robinhoodchain.blockscout.com/address/0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8) | [impl](https://repo.sourcify.dev/4663/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc) |
-| OlpManager — M | [`0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b`](https://robinhoodchain.blockscout.com/address/0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b) | [impl](https://repo.sourcify.dev/4663/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc) |
-| OlpManager — L | [`0x887Af039C15CCe9636195C80254B46a8Faf03FDc`](https://robinhoodchain.blockscout.com/address/0x887Af039C15CCe9636195C80254B46a8Faf03FDc) | [impl](https://repo.sourcify.dev/4663/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc) |
+| Vault — S | [`0x21bA39e9394657A6196f6948C2701D9fD9612289`](https://robinhoodchain.blockscout.com/address/0x21bA39e9394657A6196f6948C2701D9fD9612289) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| Vault — M | [`0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE`](https://robinhoodchain.blockscout.com/address/0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| Vault — L | [`0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897`](https://robinhoodchain.blockscout.com/address/0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| VaultUtils — S | [`0xfB970601A11254bA465fE52eC88546299E1E002c`](https://robinhoodchain.blockscout.com/address/0xfB970601A11254bA465fE52eC88546299E1E002c) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| VaultUtils — M | [`0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066`](https://robinhoodchain.blockscout.com/address/0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| VaultUtils — L | [`0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573`](https://robinhoodchain.blockscout.com/address/0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| OlpManager — S | [`0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8`](https://robinhoodchain.blockscout.com/address/0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+| OlpManager — M | [`0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b`](https://robinhoodchain.blockscout.com/address/0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+| OlpManager — L | [`0x887Af039C15CCe9636195C80254B46a8Faf03FDc`](https://robinhoodchain.blockscout.com/address/0x887Af039C15CCe9636195C80254B46a8Faf03FDc) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
 
 Each pool has its own vault, accounting/LP tokens and reward contracts.
 
@@ -145,8 +145,8 @@ Each pool has its own vault, accounting/LP tokens and reward contracts.
 
 | Contract | Address (explorer) | Implementation |
 | --- | --- | --- |
-| OptionsToken — BTC | [`0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500`](https://robinhoodchain.blockscout.com/address/0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500) | [impl](https://repo.sourcify.dev/4663/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9) |
-| OptionsToken — ETH | [`0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02`](https://robinhoodchain.blockscout.com/address/0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02) | [impl](https://repo.sourcify.dev/4663/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9) |
+| OptionsToken — BTC | [`0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500`](https://robinhoodchain.blockscout.com/address/0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500) | [impl](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
+| OptionsToken — ETH | [`0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02`](https://robinhoodchain.blockscout.com/address/0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02) | [impl](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
 | USDG — S | [`0xb4193D3618E45231A3D4a73600170ef5cbF62E0F`](https://robinhoodchain.blockscout.com/address/0xb4193D3618E45231A3D4a73600170ef5cbF62E0F) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
 | USDG — M | [`0x4E4E9EF8f0170fb9190608816068610E6e9D9184`](https://robinhoodchain.blockscout.com/address/0x4E4E9EF8f0170fb9190608816068610E6e9D9184) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
 | USDG — L | [`0x42A7D4dcd0c84ee14547d3C738D40C14D7f66fA4`](https://robinhoodchain.blockscout.com/address/0x42A7D4dcd0c84ee14547d3C738D40C14D7f66fA4) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
@@ -171,9 +171,9 @@ Each pool has its own vault, accounting/LP tokens and reward contracts.
 | RewardRouterV2 — S | [`0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0`](https://robinhoodchain.blockscout.com/address/0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
 | RewardRouterV2 — M | [`0x95420DdB175A1550f5fC66Ca5847352B53b6E0cA`](https://robinhoodchain.blockscout.com/address/0x95420DdB175A1550f5fC66Ca5847352B53b6E0cA) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
 | RewardRouterV2 — L | [`0x366c7f855d9bc013da3F9aC10C98b3F4EF7A5Ed8`](https://robinhoodchain.blockscout.com/address/0x366c7f855d9bc013da3F9aC10C98b3F4EF7A5Ed8) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
-| OlpQueue — S | [`0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16`](https://robinhoodchain.blockscout.com/address/0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16) | [impl](https://repo.sourcify.dev/4663/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66) |
-| OlpQueue — M | [`0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2`](https://robinhoodchain.blockscout.com/address/0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2) | [impl](https://repo.sourcify.dev/4663/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66) |
-| OlpQueue — L | [`0xF82fb623BEE693351bD7099Cc3650FBE46FB8349`](https://robinhoodchain.blockscout.com/address/0xF82fb623BEE693351bD7099Cc3650FBE46FB8349) | [impl](https://repo.sourcify.dev/4663/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66) |
+| OlpQueue — S | [`0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16`](https://robinhoodchain.blockscout.com/address/0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+| OlpQueue — M | [`0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2`](https://robinhoodchain.blockscout.com/address/0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+| OlpQueue — L | [`0xF82fb623BEE693351bD7099Cc3650FBE46FB8349`](https://robinhoodchain.blockscout.com/address/0xF82fb623BEE693351bD7099Cc3650FBE46FB8349) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
 
 </details>
 
@@ -225,18 +225,15 @@ existing ABI names `USDC` and `core.usdc` reference Paxos USDG on this chain.
 | Standalone compilation | Passed with the settings above |
 | Deployment receipts and runtime code | Passed; bootstrap, oracle upgrade and 18 stock pairs |
 | Account v6, factory/beacon wiring and admin/keeper roles | Passed |
-| Source verification | **110 addresses:** 100 on Blockscout; 10 exact matches on Sourcify |
+| Source verification | **110 addresses:** 110 on Blockscout |
 
 Application implementation bytecode matches the standalone build, with immutable
 bindings checked on-chain. Transparent proxy and ProxyAdmin shells match the
 deployment plugin's bundled OpenZeppelin artifacts
 (`@openzeppelin/upgrades-core` `1.40.0`).
 
-Source links use **Blockscout or Sourcify**. All 110 deployed addresses, including
-proxy shells and the superseded oracle implementation, have published source
-verification. Sourcify reports exact matches for both creation and runtime code
-on the 10 larger implementations awaiting Blockscout registration after
-HTTP 500 responses from its authenticated PRO API.
+All 110 deployed addresses, including proxy shells and the superseded oracle
+implementation, are fully source-verified on **Blockscout**.
 See the [address-by-address results](deployments/source-verification.json).
 
 See the [deployment verification record](docs/robinhood-mainnet-deployment.md)

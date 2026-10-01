@@ -81,10 +81,10 @@ accepted preflight guards were applied and checked before broadcasting.
 Final transaction count: 236. Total gas: 0.002816924745948 ETH. Detailed source
 verification status is maintained in the README and deployment manifest.
 
-Source publication covers all 110 creation addresses: 100 are fully verified on
-Blockscout and 10 have exact creation/runtime matches on Sourcify. The remaining
-Blockscout submissions returned HTTP 500. Address-specific REST checks distinguish
-verified contracts from unverified contracts merely displaying a verified twin.
-All 36 stock/ETF creations and the current PrimaryOracle implementation are fully
-verified on Blockscout. The README highlights all 20 planned underlyings and
+All 110 creation addresses are fully source-verified on Blockscout, confirmed by
+address-specific REST checks through 2026-10-01T13:13:02Z. Some submissions
+returned HTTP 500 before subsequent checks confirmed completion; the server-side
+cause is not established. Checks require each address's own full verification,
+not source displayed from a verified twin. No further transaction or browser
+upload was needed. The README highlights all 20 planned underlyings and
 distinguishes deployed token pairs from market activation.

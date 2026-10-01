@@ -105,11 +105,10 @@ Paxos USDG is the external deposit and settlement asset. The unchanged ABI names
   creations match their exact constructor/initializer data and runtime code;
   receipts and canonical blocks were independently rechecked.
 
-Sources for all 110 creation addresses are verified through Blockscout or Sourcify;
-see the [per-address verification results](../deployments/source-verification.json).
-Blockscout registration remains pending for 10 implementations after
-HTTP 500 responses from its authenticated API. Those contracts have exact
-creation and runtime matches on Sourcify, linked from the README.
+All 110 creation addresses are fully source-verified on Blockscout; see the
+[per-address verification results](../deployments/source-verification.json).
+Checks confirm each address's own full verification, not source displayed from
+a verified twin. No source registrations remain pending.
 
 Nonzero real-USDG funding, smart-wallet funding and live trading were not exercised
 in this bootstrap; local mock-token deposit/withdrawal rehearsal passed. This

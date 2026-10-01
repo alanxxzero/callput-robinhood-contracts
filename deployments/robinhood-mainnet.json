@@ -671,10 +671,10 @@
       "explorer source verification is separate"
     ],
     "explorerSourceVerification": {
-      "blockscoutVerified": 100,
-      "sourcifyExact": 10,
+      "blockscoutVerified": 110,
+      "sourcifyExact": 0,
       "total": 110,
-      "blockscoutPending": 10,
+      "blockscoutPending": 0,
       "report": "source-verification.json"
     },
     "compiler": {
