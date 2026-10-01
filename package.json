@@ -1,0 +1,22 @@
+{
+  "name": "callput-robinhood-contracts",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CallPut options protocol and Deposit trading accounts — contract sources for Robinhood Chain review",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alanxxzero/callput-robinhood-contracts.git"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "clean": "hardhat clean"
+  },
+  "devDependencies": {
+    "hardhat": "2.22.18",
+    "solc": "0.8.16"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "4.9.6"
+  }
+}

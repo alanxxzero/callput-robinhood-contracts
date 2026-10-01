@@ -1,0 +1,16 @@
+{
+  "sourceRepository": "alanxxzero/callput",
+  "sourceRef": "main",
+  "sourceCommit": "928af0840f8c7a081b5db8f90f3dbe1c2824fdbb",
+  "sourceDirectory": "contract/contracts",
+  "sourceTree": "b0d96549cdf740c735053a54dbb0677d952f5681",
+  "snapshotDate": "2026-10-01",
+  "solidityFileCount": 126,
+  "sourceFilesModified": false,
+  "target": "Robinhood Chain",
+  "targetChainId": 4663,
+  "settlementToken": "Paxos USDG",
+  "deploymentStatus": "pending",
+  "referenceRepository": "alanxxzero/callput-giwa-contracts",
+  "referenceCommit": "6e142b82ec803d0caff4a6657643dc72e8649476"
+}
