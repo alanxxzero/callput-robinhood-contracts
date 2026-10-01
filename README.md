@@ -1,18 +1,43 @@
-# CallPut — Robinhood Chain Contracts
+<div align="center">
 
-CallPut is an on-chain options trading protocol. Traders open call and put positions
-against liquidity vaults, while liquidity providers earn fees through three pool
-tiers (S / M / L). Keepers supply price updates, execute orders and settle positions
-at expiry under the protocol's role-based permissions.
+# CallPut
 
-This repository contains the Solidity source, build configuration and deployed
-contract addresses for **Robinhood Chain mainnet**, including **Deposit & Trade**
-accounts funded with **Paxos USDG**.
+**On-chain options on crypto and real-world assets — Robinhood Chain contracts**
+
+[![Chain](https://img.shields.io/badge/Robinhood%20Chain-4663-0a0a0a)](https://robinhoodchain.blockscout.com)
+[![Solidity](https://img.shields.io/badge/Solidity-0.8.16-363636?logo=solidity)](#build)
+[![Verified](https://img.shields.io/badge/Blockscout-110%2F110%20verified-2ea44f)](deployments/source-verification.json)
+[![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+
+[Website](https://callput.app) · [App](https://app.callput.app) · [Docs](https://docs.callput.app) · [X](https://x.com/CallPutApp)
+
+</div>
+
+CallPut is an options protocol where **every position is a token**. A trader
+buys or sells a call, a put or a complete vertical spread, and receives a single
+ERC-1155 token whose ID encodes the full contract: underlying, expiry, strategy
+and every leg's strike and side. Liquidity vaults underwrite the other side,
+fully collateralized, and pay out in USDG at expiry.
+
+This repository contains the Solidity source, build configuration and verified
+deployment for **Robinhood Chain mainnet**. Options cover BTC and ETH as well as
+**14 US stocks and 4 ETFs**, settled in **Paxos USDG**. CallPut on Base runs the
+same contract codebase.
+
+## Highlights
+
+| | |
+| --- | --- |
+| **Strategies as tokens** | A vertical spread is one token, not two loose legs. The 256-bit token ID is the full term sheet. See [Option tokens](#option-tokens). |
+| **Real-world asset options** | Calls, puts and spreads on US equities and ETFs (NVDA, TSLA, AAPL, SPY, QQQ …) next to BTC and ETH. |
+| **Fully collateralized** | The maximum payout is reserved in the vault when a position opens. Spreads cap the loss on both sides. |
+| **Pooled liquidity** | LPs underwrite options across three vaults (S / M / L) and earn premiums and fees. |
+| **Self-custodial one-click trading** | Each user gets a smart trading account with scoped session keys. Only the owner can withdraw. |
+| **Verifiable** | All 110 deployed addresses are source-verified on Blockscout and rebuild from this repository. |
 
 ## Options underlyings — 20 assets
 
-**BTC · ETH · 14 stocks · 4 ETFs** — planned Robinhood market coverage matching
-CallPut's full Base asset universe.
+**BTC · ETH · 14 stocks · 4 ETFs** — CallPut's full asset universe on Robinhood Chain.
 
 | Category | Underlyings |
 | --- | --- |
@@ -20,11 +45,136 @@ CallPut's full Base asset universe.
 | Stocks | **AAPL, AMZN, COIN, CRCL, GOOGL, META, MSFT, MU, NVDA, PLTR, SKHY, SNDK, SPCX, TSLA** |
 | ETFs | **DRAM, EWY, QQQ, SPY** |
 
-BTC and ETH markets are registered. Stock/ETF token pairs are predeployed for
-future listings; market registration and activation follow separately.
-**Robinhood trading has not launched yet.**
+Each underlying has its own `OptionsToken` contract. Stock and ETF underlyings
+are price identifiers; options on them are cash-settled in USDG, so no tokenized
+share custody is involved.
+
+## Option tokens
+
+A CallPut position is an [`OptionsToken`](contracts/tokens/OptionsToken.sol)
+(ERC-1155) balance. The token ID is built by
+[`Utils.formatOptionTokenId`](contracts/Utils.sol) and packs the whole
+instrument into 256 bits:
+
+| Bits | Field | Width |
+| --- | --- | --- |
+| 255 – 240 | Underlying asset index | 16 |
+| 239 – 200 | Expiry (Unix seconds) | 40 |
+| 199 – 196 | Strategy | 4 |
+| 195 – 194 | Leg count − 1 | 2 |
+| 193 – 146 | Leg 1: `isBuy` · strike · `isCall` | 1 + 46 + 1 |
+| 145 – 98 | Leg 2 | 48 |
+| 97 – 50 | Leg 3 | 48 |
+| 49 – 2 | Leg 4 | 48 |
+| 1 – 0 | Vault index (S / M / L) | 2 |
+
+Any contract, indexer or wallet can read the terms straight from the ID:
+
+```solidity
+(
+    uint16 underlyingAssetIndex,
+    uint40 expiry,
+    Utils.Strategy strategy,
+    uint8 legs,
+    bool[4] memory isBuys,
+    uint48[4] memory strikePrices,
+    bool[4] memory isCalls,
+    uint8 vaultIndex
+) = Utils.parseOptionTokenId(optionTokenId);
+```
+
+### Supported strategies
+
+| ID | Strategy | Legs | Enabled on Robinhood |
+| --- | --- | --- | --- |
+| 1 – 4 | Buy Call · Sell Call · Buy Put · Sell Put | 1 | — |
+| 5 | Buy Call Spread | 2 | ✓ |
+| 6 | Sell Call Spread | 2 | ✓ |
+| 7 | Buy Put Spread | 2 | ✓ |
+| 8 | Sell Put Spread | 2 | ✓ |
+
+Strategies are switched on by a bitmask in `Controller`. Robinhood is configured
+with the four vertical spreads (`allowedStrategiesMask = 0x1e0`), so every position
+has a defined maximum loss and a defined maximum payout.
+
+### Design properties
+
+- **One token per strategy.** Both legs of a spread live in one ID, so a spread is
+  opened, transferred, closed and settled as one unit.
+- **Canonical.** Legs are sorted by strike before encoding. The same strategy
+  always produces the same ID, and positions from different traders are fungible.
+- **Mirrored.** On every open the trader receives the ID and the vault receives
+  its mirror — the same ID with each leg's `isBuy` bit flipped. When a vault
+  ends up holding both sides of an ID, keepers net them through `Controller`
+  and the reserved collateral is released.
+- **Bearer instrument.** Close and settlement act on the caller's own token
+  balance. Whoever holds the token owns the payoff. Positions move with a
+  standard ERC-1155 transfer: to another wallet, through OTC or on any
+  ERC-1155 marketplace.
+- **Room to grow.** The format already has four leg slots and a 16-value strategy
+  field (eight in use). Multi-leg structures such as butterflies and condors fit
+  without changing the token format.
+
+## How a trade works
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Owner as Owner wallet
+    participant Acct as Trading account
+    participant PM as PositionManager
+    actor Keeper
+    participant Core as Controller + Vault
+    Owner->>Acct: Deposit USDG, sign a scoped session grant
+    Acct->>PM: Open request, signed by the session key
+    Keeper->>PM: Execute with current mark price
+    PM->>Core: Open position
+    Core-->>Acct: Mint option token (ID)
+    Core-->>Core: Mint mirror token to vault, reserve max payout
+    Note over Acct,Core: Hold, transfer, close early, or settle at expiry
+    Keeper->>Core: Submit settlement price after expiry
+    Acct->>Core: Settle: hand in token, receive USDG payoff
+```
+
+Execution price is the oracle mark price plus a risk premium when buying, or
+minus it when selling. Premiums paid into a vault are released to LPs over time
+rather than all at once.
 
 ## Architecture
+
+```mermaid
+flowchart LR
+    subgraph Accounts["Deposit & Trade"]
+        F[TradingAccountFactory] --> B[UpgradeableBeacon]
+        B --> AI[TradingAccountSessionImpl v6]
+    end
+    subgraph Engine["Trading engine"]
+        PM[PositionManager] --> C[Controller]
+        C --> OM[OptionsMarket]
+        SM[SettleManager]
+    end
+    subgraph Liquidity["Liquidity — S / M / L"]
+        V[Vault] --- VU[VaultUtils]
+        OLP[OlpManager · OLP · rewards] --> V
+    end
+    subgraph Pricing["Oracles"]
+        VPF[VaultPriceFeed]
+        SPF[SpotPriceFeed]
+        FPF[FastPriceFeed]
+        PVF[PositionValueFeed]
+        STF[SettlePriceFeed]
+    end
+    AI -->|open · close| PM
+    AI -->|settle| SM
+    C -->|mint · burn| OT[OptionsToken ×20<br/>ERC-1155]
+    C --> V
+    SM --> C
+    V --> VPF
+    SM --> STF
+    K((Keepers)) -.->|prices · execution| Pricing
+    K -.-> PM
+    AUTH[OptionsAuthority] -.->|roles| Engine
+```
 
 | Module | Key contracts | Responsibility |
 | --- | --- | --- |
@@ -42,10 +192,21 @@ use beacon proxies created by a non-upgradeable factory.
 
 ### Deposit & Trade
 
-Each owner has a trading account that holds USDG and positions. The owner can
-authorize a session key for trading; withdrawals require owner authorization.
-Referrals are registered by the trading account. The factory controls account
-admission and beacon upgrades, and the beacon currently points to account
+Each owner has a smart trading account that holds USDG and option tokens. The
+owner signs an EIP-712 **session grant** once; the session key can then trade
+without a wallet prompt per order, strictly inside the grant:
+
+| Grant limit | Scope |
+| --- | --- |
+| Time window | `validAfter` – `validUntil` |
+| Markets and strategies | Allowed underlyings and a strategy bitmask |
+| Spend | Per-open and total spend caps; maximum opens and closes |
+| Fees | Per-trade and total fee caps |
+| Revocation | Per-session revoke or an epoch bump that invalidates every session |
+
+Session keys cannot withdraw. Withdrawals of USDG or option tokens always
+require the owner. Referrals are registered by the trading account. The factory
+controls account admission and beacon upgrades; the beacon points to account
 implementation **v6**.
 
 ## Robinhood mainnet
@@ -57,26 +218,8 @@ implementation **v6**.
 | Public RPC | `https://rpc.mainnet.chain.robinhood.com` |
 | Gas token | ETH |
 | Settlement asset | Paxos USDG (6 decimals) |
-| Registered markets | BTC, ETH |
-| Planned stock/ETF markets | 18; see the underlying list above |
-| Deployment status | Contracts deployed; account admission closed (`openToAll = false`) |
-
-Application and keeper-service rollout is separate from this contract deployment.
-
-## Compiler settings
-
-| Setting | Value |
-| --- | --- |
-| Solidity | `0.8.16+commit.07a7930e` |
-| Optimizer | enabled, `runs: 10` |
-| viaIR | `true` |
-| EVM target | `london` |
-| OpenZeppelin Contracts | `4.9.6` |
-| Remapping | `@openzeppelin/=node_modules/@openzeppelin/` |
-
-Compiler settings agree in [hardhat.config.js](hardhat.config.js) and
-[foundry.toml](foundry.toml). Dependencies are pinned in
-[package-lock.json](package-lock.json).
+| Enabled strategies | Buy/Sell Call Spread, Buy/Sell Put Spread |
+| Underlyings | 20: BTC, ETH, 14 stocks, 4 ETFs |
 
 ## Deployed addresses
 
@@ -180,8 +323,7 @@ Each pool has its own vault, accounting/LP tokens and reward contracts.
 ### Stock & ETF underlyings (18)
 
 Each underlying is a zero-supply ERC-20 identifier with a matching `OptionsToken`
-proxy, reusing the BTC/ETH OptionsToken implementation. These contracts are
-predeployed and **not yet registered as Robinhood markets**. The underlying tokens
+proxy, reusing the BTC/ETH OptionsToken implementation. The underlying tokens
 are protocol identifiers; they do not represent ownership of shares or ETF units.
 
 | Underlying | Underlying address | OptionsToken address |
@@ -301,6 +443,19 @@ npm run compile
 Hardhat uses the pinned local `solc` WASM compiler. After dependency installation,
 compilation needs no RPC connection, wallet key or compiler download. The first
 optimized build can take several minutes.
+
+| Setting | Value |
+| --- | --- |
+| Solidity | `0.8.16+commit.07a7930e` |
+| Optimizer | enabled, `runs: 10` |
+| viaIR | `true` |
+| EVM target | `london` |
+| OpenZeppelin Contracts | `4.9.6` |
+| Remapping | `@openzeppelin/=node_modules/@openzeppelin/` |
+
+Compiler settings agree in [hardhat.config.js](hardhat.config.js) and
+[foundry.toml](foundry.toml). Dependencies are pinned in
+[package-lock.json](package-lock.json).
 
 ## Source
 
