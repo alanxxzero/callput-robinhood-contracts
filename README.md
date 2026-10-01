@@ -1,91 +1,203 @@
 # CallPut — Robinhood Chain Contracts
 
-CallPut is an on-chain options protocol with pooled liquidity, keeper-executed
-orders and cash settlement. This repository contains the latest protocol and
-**Deposit & Trade** smart contracts deployed on Robinhood Chain.
+CallPut is an on-chain options trading protocol. Traders open call and put positions
+against liquidity vaults, while liquidity providers earn fees through three pool
+tiers (S / M / L). Keepers supply price updates, execute orders and settle positions
+at expiry under the protocol's role-based permissions.
 
-**Deployed on Robinhood mainnet (chain 4663)** using **Paxos USDG** as the
-settlement asset. All 198 deployment/initialization transactions and 48 named
-CallPut contracts passed receipt, runtime-code and configuration checks.
-Account admission remains closed; the application is not launched by this
-contract bootstrap. Explorer source registration is pending (verification API HTTP 403).
-
-See the [full address list and verification record](docs/robinhood-mainnet-deployment.md)
-or [JSON manifest](deployments/robinhood-mainnet.json).
-
-| Contract | Mainnet address |
-| --- | --- |
-| Trading account factory | [`0xbcaC622Bb396B2f868b37D7C41F34695c9be1862`](https://robinhoodchain.blockscout.com/address/0xbcaC622Bb396B2f868b37D7C41F34695c9be1862) |
-| Trading account implementation (v6) | [`0x2436A7575cf8A3289c7A07154f89f05660756312`](https://robinhoodchain.blockscout.com/address/0x2436A7575cf8A3289c7A07154f89f05660756312) |
-| Trading account beacon | [`0x5685d4DD5114c74C805322d4612CA5D73EAcdc62`](https://robinhoodchain.blockscout.com/address/0x5685d4DD5114c74C805322d4612CA5D73EAcdc62) |
-| Position manager | [`0x426a6b482893557E58cF38de635fEbB30Fd6a3C3`](https://robinhoodchain.blockscout.com/address/0x426a6b482893557E58cF38de635fEbB30Fd6a3C3) |
-
-## Source snapshot
-
-The 126 Solidity files in `contracts/` are an unmodified export of
-`contract/contracts/` from CallPut main commit
-`928af0840f8c7a081b5db8f90f3dbe1c2824fdbb` (2026-10-01).
-See [SOURCE.json](SOURCE.json) for the source tree hash and
-[changes since the Giwa snapshot](docs/changes-since-giwa.md).
-
-This repository contains contracts and standalone build configuration. The
-frontend, relayer, keepers, indexer and production deployment tooling live outside
-this source snapshot.
+This repository contains the Solidity source, build configuration and deployed
+contract addresses for **Robinhood Chain mainnet**, including **Deposit & Trade**
+accounts funded with **Paxos USDG**.
 
 ## Architecture
 
-| Module | Main contracts | Responsibility |
+| Module | Key contracts | Responsibility |
 | --- | --- | --- |
-| Trading accounts | `TradingAccountFactory`, `TradingAccountImpl`, `TradingAccountSessionImpl` | Deterministic accounts, deposits, withdrawals and delegated trading |
-| Session authorization | `SessionHash`, `SessionPolicy` | Typed signed intents and permitted position structure |
-| Orders and positions | `OptionsMarket`, `PositionManager`, `Controller` | Market configuration, queued orders, execution and position accounting |
-| Liquidity | `Vault`, `VaultUtils`, `OlpManager` | Risk-tiered pools and liquidity management |
+| Trading accounts | `TradingAccountFactory`, `TradingAccountSessionImpl` | Account creation, custody, owner withdrawals and session trading |
+| Options market | `OptionsMarket`, `PositionManager`, `Controller` | Markets, order execution and position accounting |
+| Liquidity | `Vault`, `VaultUtils`, `OlpManager` | S/M/L pools and liquidity management |
 | Settlement | `SettleManager`, `SettlePriceFeed` | Expiry settlement and settlement prices |
 | Pricing | `SpotPriceFeed`, `FastPriceFeed`, `VaultPriceFeed`, `PositionValueFeed` | Price inputs and option valuation |
-| Tokens and rewards | `OptionsToken`, `OLP`, `USDG`, reward contracts | ERC-1155 positions, liquidity tokens and LP rewards |
-| Permissions | `OptionsAuthority`, `AuthorityUtil` | Core administration and keeper permissions |
-| Referrals and reads | `Referral`, `ViewAggregator` | Referral relationships and aggregated views |
+| Tokens and rewards | `OptionsToken`, `USDG`, `OLP`, reward contracts | ERC-1155 positions, pool accounting, LP tokens and rewards |
+| Permissions | `OptionsAuthority`, `ProxyAdmin` | Core roles and proxy upgrade administration |
+| Referrals and reads | `Referral`, `ViewAggregator` | Referral relationships and aggregated protocol data |
 
-Core protocol contracts use transparent upgradeable proxies. Trading accounts
-use **beacon proxies** created by a non-upgradeable factory. The factory holds
-the core configuration and controls beacon upgrades through its admin authority.
+Core contracts use OpenZeppelin transparent proxies (EIP-1967). Trading accounts
+use beacon proxies created by a non-upgradeable factory.
 
-## Deposit & Trade
+### Deposit & Trade
 
-The intended Robinhood application mode is Deposit & Trade:
+Each owner has a trading account that holds USDG and positions. The owner can
+authorize a session key for trading; withdrawals require owner authorization.
+Referrals are registered by the trading account. The factory controls account
+admission and beacon upgrades, and the beacon currently points to account
+implementation **v6**.
 
-```text
-Owner wallet
-    |
-    | deposit / owner authorization
-    v
-Trading account (Paxos USDG and position custody)
-    |
-    | owner calls or authorized session intents
-    v
-PositionManager / SettleManager -> core options protocol
-```
+## Robinhood mainnet
 
-- Each account records its owner and sub-account index. Its CREATE2 address is
-  derived by the factory; funds and positions belong to the trading account.
-- Session keys authorize scoped trading actions without another owner-wallet
-  signature for each order. Grants, nonces, deadlines, revocation and epochs
-  constrain that authorization.
-- Withdrawals require the owner, either through a direct call or an owner-signed
-  withdrawal. A trading session alone does not authorize arbitrary withdrawals.
-- Account settlement reverts if any requested position cannot settle, avoiding a
-  partially successful batch being presented as complete.
-- The owner selects the account's referrer through `setReferral(parent)`.
-  `Referral` sees the trading account as the caller, independently of the owner's
-  wallet referral. The underlying `Referral` contract is unchanged.
+| Setting | Value |
+| --- | --- |
+| Chain ID | `4663` |
+| Explorer | [Robinhood Chain Blockscout](https://robinhoodchain.blockscout.com) |
+| Public RPC | `https://rpc.mainnet.chain.robinhood.com` |
+| Gas token | ETH |
+| Settlement asset | Paxos USDG (6 decimals) |
+| Initial markets | BTC, ETH |
+| Deployment status | Contracts deployed; account admission closed (`openToAll = false`) |
 
-The shared contracts retain owner-operated and legacy wallet entry points.
-Deposit-only is the intended application policy; this snapshot does not claim to
-remove those existing contract functions.
+Application and keeper-service rollout is separate from this contract deployment.
+
+## Compiler settings
+
+| Setting | Value |
+| --- | --- |
+| Solidity | `0.8.16+commit.07a7930e` |
+| Optimizer | enabled, `runs: 10` |
+| viaIR | `true` |
+| EVM target | `london` |
+| OpenZeppelin Contracts | `4.9.6` |
+| Remapping | `@openzeppelin/=node_modules/@openzeppelin/` |
+
+Compiler settings agree in [hardhat.config.js](hardhat.config.js) and
+[foundry.toml](foundry.toml). Dependencies are pinned in
+[package-lock.json](package-lock.json).
+
+## Deployed addresses
+
+Addresses and implementation links below come from the
+[mainnet deployment manifest](deployments/robinhood-mainnet.json).
+For transparent proxies, integrations use the **Address** column;
+**Implementation** links point to the underlying logic contract. Multiple
+proxies of the same type can share an implementation.
+
+Explorer source-verification status is described in [Verification](#verification).
+An implementation link alone does not indicate explorer-verified source.
+
+### Trading accounts
+
+| Contract | Address (explorer) | Role |
+| --- | --- | --- |
+| TradingAccountFactory | [`0xbcaC622Bb396B2f868b37D7C41F34695c9be1862`](https://robinhoodchain.blockscout.com/address/0xbcaC622Bb396B2f868b37D7C41F34695c9be1862) | Account creation, registry and administration |
+| UpgradeableBeacon | [`0x5685d4DD5114c74C805322d4612CA5D73EAcdc62`](https://robinhoodchain.blockscout.com/address/0x5685d4DD5114c74C805322d4612CA5D73EAcdc62) | Shared account implementation; owned by the factory |
+| TradingAccountSessionImpl | [`0x2436A7575cf8A3289c7A07154f89f05660756312`](https://robinhoodchain.blockscout.com/address/0x2436A7575cf8A3289c7A07154f89f05660756312) | Account implementation v6 |
+
+These are the factory, beacon and implementation contracts. Individual trading
+account addresses are created through the factory.
+
+### Core protocol
+
+| Contract | Address (explorer) | Implementation |
+| --- | --- | --- |
+| OptionsMarket | [`0x3271d35afAc70C0D4989F984Abb2d918bf672C7e`](https://robinhoodchain.blockscout.com/address/0x3271d35afAc70C0D4989F984Abb2d918bf672C7e) | [impl](https://robinhoodchain.blockscout.com/address/0x100291F9Fc52CE39e177DfD6d4bC72aDF906A1d9#code) |
+| Controller | [`0x0D240c1EbEeE7F74B40d6611326f5df98AB00e1B`](https://robinhoodchain.blockscout.com/address/0x0D240c1EbEeE7F74B40d6611326f5df98AB00e1B) | [impl](https://robinhoodchain.blockscout.com/address/0x66C1F85b71eCA648E27B860213676f9116f5eE9A#code) |
+| PositionManager | [`0x426a6b482893557E58cF38de635fEbB30Fd6a3C3`](https://robinhoodchain.blockscout.com/address/0x426a6b482893557E58cF38de635fEbB30Fd6a3C3) | [impl](https://robinhoodchain.blockscout.com/address/0x9D83c9f0581a695c5D1fbD7B41EB8ddc5143246D#code) |
+| SettleManager | [`0xd328D581f3Fb1Ca86D28D573bA1f17409e5112EF`](https://robinhoodchain.blockscout.com/address/0xd328D581f3Fb1Ca86D28D573bA1f17409e5112EF) | [impl](https://robinhoodchain.blockscout.com/address/0x7B968a70467C1dc0553B84E0Fd7ef25c7B357A25#code) |
+| OptionsAuthority | [`0x85e00a193d5E340339484336dd9EA09f942A0b7B`](https://robinhoodchain.blockscout.com/address/0x85e00a193d5E340339484336dd9EA09f942A0b7B) | [impl](https://robinhoodchain.blockscout.com/address/0x8B4290fffB0700ee1618BBbA88299449E92fD022#code) |
+| ViewAggregator | [`0xf277D41cc8093667bf1A023f4FBbeB8328900bb7`](https://robinhoodchain.blockscout.com/address/0xf277D41cc8093667bf1A023f4FBbeB8328900bb7) | [impl](https://robinhoodchain.blockscout.com/address/0x3E52762fAE476de0F70fE241f188dbAE0c90C2c8#code) |
+| Referral | [`0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9`](https://robinhoodchain.blockscout.com/address/0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9) | [impl](https://robinhoodchain.blockscout.com/address/0x51B48222a31413F1FD58C18Aa13b51c35020cB9c#code) |
+| FeeDistributor | [`0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41`](https://robinhoodchain.blockscout.com/address/0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41) | [impl](https://robinhoodchain.blockscout.com/address/0x9D441286DCf5e6aaE87706d88bc6Fa772D18847F#code) |
+| ProxyAdmin | [`0x182aA7Cb0Eab75E33ee861902B5C49Ae2dD0ce10`](https://robinhoodchain.blockscout.com/address/0x182aA7Cb0Eab75E33ee861902B5C49Ae2dD0ce10) | — |
+
+### Liquidity pools
+
+| Contract | Address (explorer) | Implementation |
+| --- | --- | --- |
+| Vault — S | [`0x21bA39e9394657A6196f6948C2701D9fD9612289`](https://robinhoodchain.blockscout.com/address/0x21bA39e9394657A6196f6948C2701D9fD9612289) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| Vault — M | [`0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE`](https://robinhoodchain.blockscout.com/address/0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| Vault — L | [`0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897`](https://robinhoodchain.blockscout.com/address/0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| VaultUtils — S | [`0xfB970601A11254bA465fE52eC88546299E1E002c`](https://robinhoodchain.blockscout.com/address/0xfB970601A11254bA465fE52eC88546299E1E002c) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| VaultUtils — M | [`0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066`](https://robinhoodchain.blockscout.com/address/0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| VaultUtils — L | [`0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573`](https://robinhoodchain.blockscout.com/address/0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| OlpManager — S | [`0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8`](https://robinhoodchain.blockscout.com/address/0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+| OlpManager — M | [`0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b`](https://robinhoodchain.blockscout.com/address/0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+| OlpManager — L | [`0x887Af039C15CCe9636195C80254B46a8Faf03FDc`](https://robinhoodchain.blockscout.com/address/0x887Af039C15CCe9636195C80254B46a8Faf03FDc) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+
+Each pool has its own vault, accounting/LP tokens and reward contracts.
+
+### Oracles
+
+| Contract | Address (explorer) | Implementation |
+| --- | --- | --- |
+| VaultPriceFeed | [`0x2666ce652b1929D4F5a2dBBf094E5DfD38d1b9f1`](https://robinhoodchain.blockscout.com/address/0x2666ce652b1929D4F5a2dBBf094E5DfD38d1b9f1) | [impl](https://robinhoodchain.blockscout.com/address/0x5f549AAbE9586224988F23FE88f5f15a23224bf3#code) |
+| SpotPriceFeed | [`0x2318040e26791777d675cFeF87FE25BDcE36439A`](https://robinhoodchain.blockscout.com/address/0x2318040e26791777d675cFeF87FE25BDcE36439A) | [impl](https://robinhoodchain.blockscout.com/address/0xd2BCAB3d76600e61c64FDba6726D495F1B6B92CB#code) |
+| FastPriceFeed | [`0xA936FCaD3C5CDda9106F72499729877E9dF5918a`](https://robinhoodchain.blockscout.com/address/0xA936FCaD3C5CDda9106F72499729877E9dF5918a) | [impl](https://robinhoodchain.blockscout.com/address/0x479B6Bf0A40c5359C68352B91e504977Ae65D7DC#code) |
+| FastPriceEvents | [`0x1e5A834eb298288E28C07b6f2369e0008a5d156C`](https://robinhoodchain.blockscout.com/address/0x1e5A834eb298288E28C07b6f2369e0008a5d156C) | [impl](https://robinhoodchain.blockscout.com/address/0x049D3b6455a5E393a3C0761CfCFE75ff2221cbb6#code) |
+| SettlePriceFeed | [`0xB51EC03d51e8880FDc2A24f918072694516FB626`](https://robinhoodchain.blockscout.com/address/0xB51EC03d51e8880FDc2A24f918072694516FB626) | [impl](https://robinhoodchain.blockscout.com/address/0xfe3F5FF9e740AeD8213dc6327E1DdC13718D6702#code) |
+| PositionValueFeed | [`0x32847298142A9E692EfE1c259aADe4f260bDe94C`](https://robinhoodchain.blockscout.com/address/0x32847298142A9E692EfE1c259aADe4f260bDe94C) | [impl](https://robinhoodchain.blockscout.com/address/0x60Acd6ca57b279065D8629d091cCEb891C5751F4#code) |
+| BasePrimaryOracle | [`0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B`](https://robinhoodchain.blockscout.com/address/0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B) | [impl](https://robinhoodchain.blockscout.com/address/0xD7cF4b2a31E7115006E5c87db21a4bD5eB781f1f#code) |
+
+### Protocol tokens
+
+| Contract | Address (explorer) | Implementation |
+| --- | --- | --- |
+| OptionsToken — BTC | [`0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500`](https://robinhoodchain.blockscout.com/address/0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500) | [impl](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
+| OptionsToken — ETH | [`0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02`](https://robinhoodchain.blockscout.com/address/0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02) | [impl](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
+| USDG — S | [`0xb4193D3618E45231A3D4a73600170ef5cbF62E0F`](https://robinhoodchain.blockscout.com/address/0xb4193D3618E45231A3D4a73600170ef5cbF62E0F) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
+| USDG — M | [`0x4E4E9EF8f0170fb9190608816068610E6e9D9184`](https://robinhoodchain.blockscout.com/address/0x4E4E9EF8f0170fb9190608816068610E6e9D9184) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
+| USDG — L | [`0x42A7D4dcd0c84ee14547d3C738D40C14D7f66fA4`](https://robinhoodchain.blockscout.com/address/0x42A7D4dcd0c84ee14547d3C738D40C14D7f66fA4) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
+| OLP — S | [`0x463811B783f53c7adf01Bc51aFb7880b6d95A5d5`](https://robinhoodchain.blockscout.com/address/0x463811B783f53c7adf01Bc51aFb7880b6d95A5d5) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
+| OLP — M | [`0xcc0BA1Bbc4D0625bDb6c16A935bF1317788d39D1`](https://robinhoodchain.blockscout.com/address/0xcc0BA1Bbc4D0625bDb6c16A935bF1317788d39D1) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
+| OLP — L | [`0xc163528C97d005b70095E2DD20e582F6408Cc96c`](https://robinhoodchain.blockscout.com/address/0xc163528C97d005b70095E2DD20e582F6408Cc96c) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
+
+`OptionsToken` is ERC-1155. `S_USDG`, `M_USDG` and `L_USDG` are internal
+18-decimal vault accounting tokens; `OLP` tokens represent pool liquidity.
+
+<details>
+<summary>Reward and liquidity queue contracts</summary>
+
+| Contract | Address (explorer) | Implementation |
+| --- | --- | --- |
+| RewardTracker — S | [`0x6b8979E1662a1e7524ecBBA625AA31cf87247Ea5`](https://robinhoodchain.blockscout.com/address/0x6b8979E1662a1e7524ecBBA625AA31cf87247Ea5) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
+| RewardTracker — M | [`0xC7223e6F948C0804D62FfC4FD33A02225A743A1D`](https://robinhoodchain.blockscout.com/address/0xC7223e6F948C0804D62FfC4FD33A02225A743A1D) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
+| RewardTracker — L | [`0x0899213428E3eF7f1D590e37BF8363E19Cc27f4e`](https://robinhoodchain.blockscout.com/address/0x0899213428E3eF7f1D590e37BF8363E19Cc27f4e) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
+| RewardDistributor — S | [`0xD339d220bb30603e66cf15394657C9cAaC97274E`](https://robinhoodchain.blockscout.com/address/0xD339d220bb30603e66cf15394657C9cAaC97274E) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
+| RewardDistributor — M | [`0x30654838D2f3F3Ba475dd53a24Ce3aed3d4280DE`](https://robinhoodchain.blockscout.com/address/0x30654838D2f3F3Ba475dd53a24Ce3aed3d4280DE) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
+| RewardDistributor — L | [`0x9C8DDe98a6b09fD484eBFB74C2A016148B0D7378`](https://robinhoodchain.blockscout.com/address/0x9C8DDe98a6b09fD484eBFB74C2A016148B0D7378) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
+| RewardRouterV2 — S | [`0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0`](https://robinhoodchain.blockscout.com/address/0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
+| RewardRouterV2 — M | [`0x95420DdB175A1550f5fC66Ca5847352B53b6E0cA`](https://robinhoodchain.blockscout.com/address/0x95420DdB175A1550f5fC66Ca5847352B53b6E0cA) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
+| RewardRouterV2 — L | [`0x366c7f855d9bc013da3F9aC10C98b3F4EF7A5Ed8`](https://robinhoodchain.blockscout.com/address/0x366c7f855d9bc013da3F9aC10C98b3F4EF7A5Ed8) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
+| OlpQueue — S | [`0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16`](https://robinhoodchain.blockscout.com/address/0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+| OlpQueue — M | [`0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2`](https://robinhoodchain.blockscout.com/address/0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+| OlpQueue — L | [`0xF82fb623BEE693351bD7099Cc3650FBE46FB8349`](https://robinhoodchain.blockscout.com/address/0xF82fb623BEE693351bD7099Cc3650FBE46FB8349) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+
+</details>
+
+### External assets
+
+These token contracts already exist on Robinhood Chain.
+
+| Asset | Address (explorer) | Decimals | Role |
+| --- | --- | --- | --- |
+| Paxos USDG | [`0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`](https://robinhoodchain.blockscout.com/address/0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168) | 6 | Deposits, trading collateral and withdrawals |
+| WBTC | [`0x6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6`](https://robinhoodchain.blockscout.com/address/0x6bac06600D220Ac5Ac281AD1f504D2Cf0F90F6e6) | 8 | BTC underlying asset |
+| WETH | [`0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73`](https://robinhoodchain.blockscout.com/address/0x0Bd7D308f8E1639FAb988df18A8011f41EAcAD73) | 18 | ETH underlying asset |
+
+**Paxos USDG is separate from CallPut's internal USDG accounting tokens.** The
+existing ABI names `USDC` and `core.usdc` reference Paxos USDG on this chain.
+
+## Verification
+
+| Check | Status |
+| --- | --- |
+| Standalone compilation | Passed with the settings above |
+| Deployment receipts and runtime code | Passed; recorded at block `77336947` |
+| Account v6, factory/beacon wiring and admin/keeper roles | Passed |
+| Explorer source verification | Pending |
+
+Application implementation bytecode matches the standalone build, with immutable
+bindings checked on-chain. Transparent proxy and ProxyAdmin shells match the
+deployment plugin's bundled OpenZeppelin artifacts
+(`@openzeppelin/upgrades-core` `1.40.0`).
+
+Explorer verification is a separate step that publishes source code and matches
+it to deployed bytecode. Automated access to Blockscout's verification settings
+endpoint returned a Cloudflare browser challenge (HTTP 403), before a source
+submission could be made.
+
+See the [deployment verification record](docs/robinhood-mainnet-deployment.md)
+for transaction records, runtime hashes and the scope of completed checks.
 
 ## Build
-
-With Node.js and npm installed:
 
 ```sh
 git clone https://github.com/alanxxzero/callput-robinhood-contracts.git
@@ -94,59 +206,19 @@ npm ci
 npm run compile
 ```
 
-| Setting | Value |
-| --- | --- |
-| Solidity | `0.8.16+commit.07a7930e` |
-| Optimizer | enabled, 10 runs |
-| viaIR | `true` |
-| EVM target | `london` (Solidity 0.8.16 default) |
-| OpenZeppelin Contracts | `4.9.6` |
+Hardhat uses the pinned local `solc` WASM compiler. After dependency installation,
+compilation needs no RPC connection, wallet key or compiler download. The first
+optimized build can take several minutes.
 
-Dependencies are pinned in `package-lock.json`. Hardhat uses the locked local
-`solc` package, so compilation after installation needs no compiler download,
-RPC connection, environment file or wallet key. A matching `foundry.toml` and
-remapping are provided for `forge build` after installing the npm dependencies.
+## Source
 
-See the [snapshot verification record](docs/20261001-robinhood-contract-snapshot/implementation.md)
-for checks performed and build-verification limits.
+The 126 Solidity files are an unmodified snapshot of CallPut main commit
+`928af0840f8c7a081b5db8f90f3dbe1c2824fdbb`. See
+[SOURCE.json](SOURCE.json) and the
+[changes since the Giwa snapshot](docs/changes-since-giwa.md).
 
-The complete standalone build passed on 2026-10-01: 154 source units including
-dependencies. All 58 contracts with runtime bytecode under `contracts/` are
-below the 24,576-byte EVM runtime limit. The pinned compiler runs as WASM;
-the first optimized build can take several minutes.
-
-## Deployment scope
-
-This is a full source snapshot, not a list of contracts to deploy unchanged on
-every network. `PublicFaucet`, mocks and existing chain adapters are included for
-source completeness; they are not a Robinhood production deployment plan.
-
-### Two different USDG tokens
-
-| Token | Role | Decimals |
-| --- | --- | --- |
-| **Paxos Global Dollar (USDG)** | External deposit, trading and withdrawal asset | 6 |
-| **CallPut vault USDG** (`S_USDG`, `M_USDG`, `L_USDG`) | Existing internal vault accounting tokens | 18 |
-
-Robinhood and Paxos publish the external USDG address as
-[`0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168`](https://robinhoodchain.blockscout.com/address/0x5fc5360D0400a0Fd4f2af552ADD042D716F1d168).
-This is an existing third-party token, **not** a CallPut deployment.
-See [Paxos's token registry](https://docs.paxos.com/guides/stablecoin/usdg/mainnet).
-
-The shared contract ABI retains names such as `USDC` and `core.usdc`; on
-Robinhood those settlement-token slots reference Paxos USDG. This preserves
-the existing contract code and does not rename or replace the internal vault
-tokens. Off-chain integrations must configure USDG's address, symbol, decimals
-and signing domain explicitly. CCTP is not part of this deployment scope.
-
-Before enabling funding methods in the application, complete nonzero real-USDG
-and smart-wallet integration checks. The deployment record distinguishes local
-mock-token rehearsal, read-only mainnet checks and explorer source registration.
-
-Application implementation bytecode matches this build, with immutable bindings
-checked on-chain. Transparent proxy and ProxyAdmin shells use the deployment
-plugin's bundled OpenZeppelin artifacts, as documented in the verification record.
-This snapshot and deployment record are not an independent protocol audit.
+Frontend, relayer, keeper and deployment tooling are maintained separately.
+Test utilities included in the source tree are not part of the mainnet deployment.
 
 ## License
 
