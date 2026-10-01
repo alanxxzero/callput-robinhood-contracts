@@ -323,10 +323,10 @@
     },
     "PRIMARY_ORACLE": {
       "address": "0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B",
-      "contract": "BasePrimaryOracle",
-      "implementation": "0xD7cF4b2a31E7115006E5c87db21a4bD5eB781f1f",
+      "contract": "PrimaryOracle",
+      "implementation": "0x66cAAcF4F6635b553B2Ff984DCA1877c0fDAD324",
       "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
-      "implementationRuntimeHash": "0x79399766181c13fbd7aac48bc57eb1e2dd2a21d3965d429acd2ea172af82e98c"
+      "implementationRuntimeHash": "0x1b35c1d50117b0204dd3cee02edc9c8a8de559680c4bdbc2ee14f1cca51614b3"
     },
     "VIEW_AGGREGATOR": {
       "address": "0xf277D41cc8093667bf1A023f4FBbeB8328900bb7",
@@ -362,13 +362,286 @@
       "implementation": null,
       "runtimeHash": "0xa4e7a212190833d7d36ac8d9a7b8a5e3700815cc517c3d733f330bf93af6bfbe",
       "implementationRuntimeHash": "0xa4e7a212190833d7d36ac8d9a7b8a5e3700815cc517c3d733f330bf93af6bfbe"
+    },
+    "TSLA": {
+      "address": "0x2e3827D35687e4D2c7DD94fce14E6D6fEAfD873d",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "TSLA_OPTIONS_TOKEN": {
+      "address": "0x9C007762CBf1ABF0Bb3e1C67660023bD3Ad1734D",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "QQQ": {
+      "address": "0x2d4a28f9d7Fa0754B9E6a4e768891AA5AE5CAee1",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "SPY_OPTIONS_TOKEN": {
+      "address": "0x334D4fbf590Cbc3553fBdd6f11a2C0d7C1221e8A",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "SPY": {
+      "address": "0xD552a5358908e3B30439D925ca1F1fCe5Ab009F7",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "QQQ_OPTIONS_TOKEN": {
+      "address": "0x951D61C56CC4c3b79CF7078C371C474917480FDd",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "EWY_OPTIONS_TOKEN": {
+      "address": "0x35D2Cd90b6Ba62ea33F38A711DbB99C6C3D81Ba7",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "NVDA": {
+      "address": "0x894AB41c5353eB9795FFC44B412628eE1b2197FB",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "EWY": {
+      "address": "0xAe8fedfa2BAbF1792854429d6040799062E075EE",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "COIN": {
+      "address": "0x04D773Cc8C88895FA29380a09E90613bFABEB4D4",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "NVDA_OPTIONS_TOKEN": {
+      "address": "0xcA2bc103CD18EC0b7646969dcB383D64037cb5bB",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "COIN_OPTIONS_TOKEN": {
+      "address": "0x48E93EbC08ccaa3D3fC9E388bfEfD8209922D1cb",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "SPCX": {
+      "address": "0x973533762B5F0Fa16B15854A54a920Ce7560e926",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "MU": {
+      "address": "0xB694AC94B1f0C22013B66AF948A7F02E7Ed64daa",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "SPCX_OPTIONS_TOKEN": {
+      "address": "0x0EAe421365011aE66dfa8bb9D1E8Baee54e5402d",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "SKHY": {
+      "address": "0x53FFa4E63165fc7ed5390e02277e4c0e36336c50",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "SKHY_OPTIONS_TOKEN": {
+      "address": "0x0a750ABB292C902D9752C5f508Ec6f5ec9Be7FCd",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "MU_OPTIONS_TOKEN": {
+      "address": "0x1868dB80a42E6D303E3A961886ba4534b6f56d40",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "DRAM": {
+      "address": "0x9e5B63e8Dc02576A31b88DA04A14C5282D7a5bfd",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "SNDK": {
+      "address": "0x467be03f40beE63606Ad208a100Fb14B5e9b7bFE",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "SNDK_OPTIONS_TOKEN": {
+      "address": "0x5dBd79079fc1abA28F0a270beEcD855aCda98c88",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "META_OPTIONS_TOKEN": {
+      "address": "0x778d648c02c8F521bE22f903Fd2edb8bD6F34DFB",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "META": {
+      "address": "0x126e5CdBc6D04880D7b17E1FC7bF44a39279d419",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "DRAM_OPTIONS_TOKEN": {
+      "address": "0xC3827d938c96232b3a08E83D71D084965Eb7e3Fb",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "AAPL": {
+      "address": "0x08817cf3D786d36b56bFa1fc5F71273314468fb1",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "GOOGL_OPTIONS_TOKEN": {
+      "address": "0x84d0040153e67618D49C49EDb3f50e6Ed8de0d7D",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "GOOGL": {
+      "address": "0xB00bC91af828AA279100b1D482aD4C07F80078b9",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "CRCL_OPTIONS_TOKEN": {
+      "address": "0x4A87676cbF3d0e725aeF3DaF8962Ea805Dda569e",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "AAPL_OPTIONS_TOKEN": {
+      "address": "0xCa103C4D4bb8CEf8bf3A8622b0a3fCA58d835118",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "CRCL": {
+      "address": "0x8d210Af1Ec489310c0A74d6eAa0cfa471F9De6cC",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "AMZN_OPTIONS_TOKEN": {
+      "address": "0x53a0B4cB036BeCE074194171B3A6f885276d61C3",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "AMZN": {
+      "address": "0x0Af16c8F8731FB9c0b8d4851e1509130CFbe5f68",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "MSFT": {
+      "address": "0x3cD315EEf182EF06e0d12f4396AC50035AB4F211",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "PLTR_OPTIONS_TOKEN": {
+      "address": "0x3DbD73E6BE453E79D28968503bb88c6c5f7d12BA",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
+    },
+    "PLTR": {
+      "address": "0x2d7a46adE1FE818D3D00A915D7f38938AE0fb404",
+      "contract": "ERC20",
+      "runtimeHash": "0x8f48c4f1cb4147bce1eab0faec408c7662af5af1fa0dc41a758226fa8f4cb0b5",
+      "decimals": 18,
+      "status": "deployed_unlisted"
+    },
+    "MSFT_OPTIONS_TOKEN": {
+      "address": "0x9AA5a975b26432730173AEeAa20E9DD1C999Ee99",
+      "contract": "OptionsToken",
+      "runtimeHash": "0x4d9be648c5bf39973670d9f8b481d5d0b971e6a2db2deccc6b98cde21c5dd83e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9",
+      "implementationRuntimeHash": "0x3e959056a11dabe7fd287463dbde83897004edc722a770fa4e9af8f4276942c4",
+      "status": "deployed_unlisted"
     }
   },
   "transactionCounts": {
-    "total": 198,
-    "contractCreation": 73,
-    "configuration": 125,
-    "depositAccountSubset": 4
+    "total": 236,
+    "contractCreation": 110,
+    "configuration": 126,
+    "depositAccountSubset": 4,
+    "bootstrap": 198,
+    "oracleUpgrade": 2,
+    "stockTokenPredeployment": 36
   },
   "accountVersion": 6,
   "accountAdmissionOpenToAll": false,
@@ -379,23 +652,31 @@
   "executionFeeWei": "60000000000000",
   "verification": {
     "result": "PASS",
-    "verifiedAt": "2026-10-01T11:26:44.768Z",
-    "blockNumber": 77336947,
-    "blockHash": "0xce7229f374c9766c4f4efbca15b985f1f6ede1a000f6c47550ab46350e10ab94",
+    "verifiedAt": "2026-10-01T12:33:56.260Z",
+    "blockNumber": 77376626,
+    "blockHash": "0xd94cb73d369a38c517a68ac7e70de2a26acfe334b37e8d1fe4934a6fe37eb444",
     "checks": [
       "all deployment receipts, nonce, calldata hash and canonical blocks",
       "proxy runtime, admin and implementation bytecode",
       "compiled implementation code with immutable bindings verified via getters",
       "admin and keeper roles",
       "account v6, factory, beacon and closed admission",
-      "Paxos USDG settlement and 18-decimal internal accounting tokens"
+      "Paxos USDG settlement and 18-decimal internal accounting tokens",
+      "PrimaryOracle upgrade preserves proxy, owner, authority and disabled primary feed",
+      "18 stock pairs: exact creation calldata, runtime, zero supply and unlisted state"
     ],
     "limitations": [
       "not a live trading/liquidity/frontend test",
       "real-token signed funding flows are not exercised",
       "explorer source verification is separate"
     ],
-    "explorerSourceVerification": "pending_api_http_403",
+    "explorerSourceVerification": {
+      "blockscoutVerified": 100,
+      "sourcifyExact": 10,
+      "total": 110,
+      "blockscoutPending": 10,
+      "report": "source-verification.json"
+    },
     "compiler": {
       "version": "0.8.16+commit.07a7930e",
       "optimizerRuns": 10,
@@ -409,10 +690,16 @@
         "TransparentUpgradeableProxy",
         "ProxyAdmin"
       ]
-    }
+    },
+    "bootstrap": {
+      "blockNumber": 77336947,
+      "blockHash": "0xce7229f374c9766c4f4efbca15b985f1f6ede1a000f6c47550ab46350e10ab94"
+    },
+    "oracleUpgradeBlock": 77364304,
+    "stockTokenBlock": 77376626
   },
-  "gasPaidWei": "2292027901670000",
-  "gasPaidEth": "0.00229202790167",
+  "gasPaidWei": "2816924745948000",
+  "gasPaidEth": "0.002816924745948",
   "transactions": [
     {
       "hash": "0xd5a5d4d4a79c98a1f3f771e78ff2a48dd31d04398317710b051db1f795699230",
@@ -1601,6 +1888,398 @@
       "nonce": 197,
       "blockNumber": 77336556,
       "contractAddress": null
+    },
+    {
+      "hash": "0xc591c20c8713b943ef4555bff9b39a372a58df84a45c5379fdf3253fbb2a0a0d",
+      "nonce": 198,
+      "blockNumber": 77362988,
+      "contractAddress": "0x66cAAcF4F6635b553B2Ff984DCA1877c0fDAD324"
+    },
+    {
+      "hash": "0xbc45ef85ace9d1a830c2cd2fa157874b873e0b04ed8e3eced1d9b45627bef1cc",
+      "nonce": 199,
+      "blockNumber": 77363066,
+      "contractAddress": null
+    },
+    {
+      "hash": "0x1587245f22c0c8aa4b5dcff02e1530f49031b5bcc16db822822432c646b9051a",
+      "nonce": 200,
+      "blockNumber": 77372200,
+      "contractAddress": "0x2e3827D35687e4D2c7DD94fce14E6D6fEAfD873d"
+    },
+    {
+      "hash": "0x27d0c0d87396509c3e7c17c2127bce2dd67a2dd2e508c0b46948e93614e7d8d8",
+      "nonce": 201,
+      "blockNumber": 77372308,
+      "contractAddress": "0x9C007762CBf1ABF0Bb3e1C67660023bD3Ad1734D"
+    },
+    {
+      "hash": "0x51583a9921799b27d3c77f8d9029cc7d70113302cd45fd0ce7efded15dd3199d",
+      "nonce": 202,
+      "blockNumber": 77372426,
+      "contractAddress": "0x2d4a28f9d7Fa0754B9E6a4e768891AA5AE5CAee1"
+    },
+    {
+      "hash": "0xdfb851d7fbf1bb8c334269075d731256d49a63442ad8f0309bae864e51eac73f",
+      "nonce": 203,
+      "blockNumber": 77372533,
+      "contractAddress": "0x951D61C56CC4c3b79CF7078C371C474917480FDd"
+    },
+    {
+      "hash": "0xc3e0b3173a85434d9581b8114e04709f7345ddfa151e289c549aff8c1142a1e5",
+      "nonce": 204,
+      "blockNumber": 77372650,
+      "contractAddress": "0xD552a5358908e3B30439D925ca1F1fCe5Ab009F7"
+    },
+    {
+      "hash": "0xdf47d8b06ed1b5ce01dabca04393014c916ef74079d4c41aefc78f908d7982be",
+      "nonce": 205,
+      "blockNumber": 77372758,
+      "contractAddress": "0x334D4fbf590Cbc3553fBdd6f11a2C0d7C1221e8A"
+    },
+    {
+      "hash": "0x2f14ce17b40dfe9b5f8725a2f947f5d691ec9e6d3a94b8a3587542fd656ff0e9",
+      "nonce": 206,
+      "blockNumber": 77372869,
+      "contractAddress": "0xAe8fedfa2BAbF1792854429d6040799062E075EE"
+    },
+    {
+      "hash": "0xc3093f17a8aa8a8a6de156abbc405f7d7ba7f770c3c1299b98b63a2f57415da7",
+      "nonce": 207,
+      "blockNumber": 77372967,
+      "contractAddress": "0x35D2Cd90b6Ba62ea33F38A711DbB99C6C3D81Ba7"
+    },
+    {
+      "hash": "0x000ddcccb8c64a0512f0aeae32342222fa06f4695312e990956943746edb3c28",
+      "nonce": 208,
+      "blockNumber": 77373083,
+      "contractAddress": "0x894AB41c5353eB9795FFC44B412628eE1b2197FB"
+    },
+    {
+      "hash": "0xc59c259c8a7a172a7b8ed09e9c1ccc14ebb2cf58427e23c64270ada974ee5c6a",
+      "nonce": 209,
+      "blockNumber": 77373188,
+      "contractAddress": "0xcA2bc103CD18EC0b7646969dcB383D64037cb5bB"
+    },
+    {
+      "hash": "0x9cde6b21fe4248e1e3a21b26a7f80e49c2558cf42a3ad86c721b53008337b0db",
+      "nonce": 210,
+      "blockNumber": 77373319,
+      "contractAddress": "0x04D773Cc8C88895FA29380a09E90613bFABEB4D4"
+    },
+    {
+      "hash": "0x75d4040e6c7ffef48ef0fffde1f714813c3e7b9e0c028164d490a55611b1a60d",
+      "nonce": 211,
+      "blockNumber": 77373431,
+      "contractAddress": "0x48E93EbC08ccaa3D3fC9E388bfEfD8209922D1cb"
+    },
+    {
+      "hash": "0xb03f27a6eaaa0b38e194adc54790244d3f224da609d17a122d5e45140696cc72",
+      "nonce": 212,
+      "blockNumber": 77373589,
+      "contractAddress": "0x973533762B5F0Fa16B15854A54a920Ce7560e926"
+    },
+    {
+      "hash": "0xa365bbb058f738965ebaa82642561a87e70c210b06f4fcec25098ed2629e43cc",
+      "nonce": 213,
+      "blockNumber": 77373693,
+      "contractAddress": "0x0EAe421365011aE66dfa8bb9D1E8Baee54e5402d"
+    },
+    {
+      "hash": "0x763034482add2fb99d5e9691c0c899ca3bca54064ecdb108f2551beb5aafb321",
+      "nonce": 214,
+      "blockNumber": 77373856,
+      "contractAddress": "0xB694AC94B1f0C22013B66AF948A7F02E7Ed64daa"
+    },
+    {
+      "hash": "0xa29023f7b4ce7e761ed3d791f0b3c552eff386e1e88f0eae32c34baa7a1c3c0d",
+      "nonce": 215,
+      "blockNumber": 77373962,
+      "contractAddress": "0x1868dB80a42E6D303E3A961886ba4534b6f56d40"
+    },
+    {
+      "hash": "0xf28bc703e7af4aa6e74c96fd18a2900c65d1170bcfff91e436d35d75ad617482",
+      "nonce": 216,
+      "blockNumber": 77374079,
+      "contractAddress": "0x53FFa4E63165fc7ed5390e02277e4c0e36336c50"
+    },
+    {
+      "hash": "0xf0aa4b0a47f502198ba26aebff1aad4665c949c2dcde3adbd2db1398f6c62b92",
+      "nonce": 217,
+      "blockNumber": 77374186,
+      "contractAddress": "0x0a750ABB292C902D9752C5f508Ec6f5ec9Be7FCd"
+    },
+    {
+      "hash": "0xaa52231e881693174905971714e2e9a44f0de16df61e6604c7405559c79dacc7",
+      "nonce": 218,
+      "blockNumber": 77374303,
+      "contractAddress": "0x467be03f40beE63606Ad208a100Fb14B5e9b7bFE"
+    },
+    {
+      "hash": "0x48c2e4fe7797ef44ba12cc652eb745052b1fe2b5a370cbb7172bd380e3b04fa7",
+      "nonce": 219,
+      "blockNumber": 77374411,
+      "contractAddress": "0x5dBd79079fc1abA28F0a270beEcD855aCda98c88"
+    },
+    {
+      "hash": "0x81f6b720fcbdb1d6466cdb0cf0cfe6e20d84c8280a07ea8c7e532d1799fe3f84",
+      "nonce": 220,
+      "blockNumber": 77374528,
+      "contractAddress": "0x9e5B63e8Dc02576A31b88DA04A14C5282D7a5bfd"
+    },
+    {
+      "hash": "0x25cb4a2a9357e86b807a95cb3badca18b1359b3cc1c6be33c0b27744ca4b8c46",
+      "nonce": 221,
+      "blockNumber": 77374639,
+      "contractAddress": "0xC3827d938c96232b3a08E83D71D084965Eb7e3Fb"
+    },
+    {
+      "hash": "0x0741234bcc5e16f4c53a8d35d8516c7616753859df38f73eaf327b725a36d578",
+      "nonce": 222,
+      "blockNumber": 77374754,
+      "contractAddress": "0x126e5CdBc6D04880D7b17E1FC7bF44a39279d419"
+    },
+    {
+      "hash": "0x91985799c6d70569e4cb1f8db7923472f7e3e720f52354ac4d24fc72e0779bcf",
+      "nonce": 223,
+      "blockNumber": 77374861,
+      "contractAddress": "0x778d648c02c8F521bE22f903Fd2edb8bD6F34DFB"
+    },
+    {
+      "hash": "0x53d0465254ed71a3bd36075d82cab9971fafe9bf19ef3a73d3251e7048ca9c97",
+      "nonce": 224,
+      "blockNumber": 77374978,
+      "contractAddress": "0xB00bC91af828AA279100b1D482aD4C07F80078b9"
+    },
+    {
+      "hash": "0x581c7477cc2dcc09f33bccdee254c8393a4da686f392f62cd1f00da6c6ee0202",
+      "nonce": 225,
+      "blockNumber": 77375085,
+      "contractAddress": "0x84d0040153e67618D49C49EDb3f50e6Ed8de0d7D"
+    },
+    {
+      "hash": "0x245ec2ed3f75459f6e31b013c99891db5036b3558a292416a1fda7cfa74cc18f",
+      "nonce": 226,
+      "blockNumber": 77375204,
+      "contractAddress": "0x08817cf3D786d36b56bFa1fc5F71273314468fb1"
+    },
+    {
+      "hash": "0xfb1af3b8f945b68a36d19982fe1420273b8e21ef657a0833dbb5087863b7e261",
+      "nonce": 227,
+      "blockNumber": 77375318,
+      "contractAddress": "0xCa103C4D4bb8CEf8bf3A8622b0a3fCA58d835118"
+    },
+    {
+      "hash": "0xa059e6613a8434ad6555b1621e77bf4e9d960f949365db76ab9e031dc9b7c71b",
+      "nonce": 228,
+      "blockNumber": 77375434,
+      "contractAddress": "0x8d210Af1Ec489310c0A74d6eAa0cfa471F9De6cC"
+    },
+    {
+      "hash": "0x380e1f6d0dba50b2206814dbc4554d136bbea3bd63cc6985110d14fd2e210c4c",
+      "nonce": 229,
+      "blockNumber": 77375534,
+      "contractAddress": "0x4A87676cbF3d0e725aeF3DaF8962Ea805Dda569e"
+    },
+    {
+      "hash": "0xe7c49d445f525de4418b62a479ce8a1dfdfb24ac2255a2a5db062765487d5ce6",
+      "nonce": 230,
+      "blockNumber": 77375641,
+      "contractAddress": "0x0Af16c8F8731FB9c0b8d4851e1509130CFbe5f68"
+    },
+    {
+      "hash": "0x4263b216aa497083d2ed52a136312423c9c90d767aa5441abccb2244778eb2b2",
+      "nonce": 231,
+      "blockNumber": 77375748,
+      "contractAddress": "0x53a0B4cB036BeCE074194171B3A6f885276d61C3"
+    },
+    {
+      "hash": "0xbcfec89b230fcfe62ecff4854ec53921057f24178da09f188330d83253e2b939",
+      "nonce": 232,
+      "blockNumber": 77375864,
+      "contractAddress": "0x3cD315EEf182EF06e0d12f4396AC50035AB4F211"
+    },
+    {
+      "hash": "0x0f24a2770d0b3e419e5cbeaddd15d92aaddc03863a4691ad4e99d3ffbdfae2c1",
+      "nonce": 233,
+      "blockNumber": 77375971,
+      "contractAddress": "0x9AA5a975b26432730173AEeAa20E9DD1C999Ee99"
+    },
+    {
+      "hash": "0xc7723bb84a743f02e2ea5f493211026c4719259ab877b1bd3e58944a67158b22",
+      "nonce": 234,
+      "blockNumber": 77376089,
+      "contractAddress": "0x2d7a46adE1FE818D3D00A915D7f38938AE0fb404"
+    },
+    {
+      "hash": "0x3a976c1de02b7c324b9c34c4f6e1af9fefcb8e4b09607f204c32417c5365ad0a",
+      "nonce": 235,
+      "blockNumber": 77376197,
+      "contractAddress": "0x3DbD73E6BE453E79D28968503bb88c6c5f7d12BA"
+    }
+  ],
+  "sourceFilesAdded": [
+    "contracts/oracles/PrimaryOracle.sol"
+  ],
+  "sourceTreeNote": "sourceTree identifies the unchanged 126-file upstream snapshot; sourceFilesAdded lists the additional local source",
+  "upgrades": [
+    {
+      "contract": "PrimaryOracle",
+      "proxy": "0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B",
+      "oldImplementation": "0xD7cF4b2a31E7115006E5c87db21a4bD5eB781f1f",
+      "implementation": "0x66cAAcF4F6635b553B2Ff984DCA1877c0fDAD324",
+      "transactions": [
+        "0xc591c20c8713b943ef4555bff9b39a372a58df84a45c5379fdf3253fbb2a0a0d",
+        "0xbc45ef85ace9d1a830c2cd2fa157874b873e0b04ed8e3eced1d9b45627bef1cc"
+      ],
+      "verifiedAtBlock": 77364304,
+      "primaryFeedEnabled": false
+    }
+  ],
+  "predeployedStockAssets": [
+    {
+      "ticker": "TSLA",
+      "baseIndex": 3,
+      "underlying": "0x2e3827D35687e4D2c7DD94fce14E6D6fEAfD873d",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x9C007762CBf1ABF0Bb3e1C67660023bD3Ad1734D",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "QQQ",
+      "baseIndex": 4,
+      "underlying": "0x2d4a28f9d7Fa0754B9E6a4e768891AA5AE5CAee1",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x951D61C56CC4c3b79CF7078C371C474917480FDd",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "SPY",
+      "baseIndex": 5,
+      "underlying": "0xD552a5358908e3B30439D925ca1F1fCe5Ab009F7",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x334D4fbf590Cbc3553fBdd6f11a2C0d7C1221e8A",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "EWY",
+      "baseIndex": 6,
+      "underlying": "0xAe8fedfa2BAbF1792854429d6040799062E075EE",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x35D2Cd90b6Ba62ea33F38A711DbB99C6C3D81Ba7",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "NVDA",
+      "baseIndex": 7,
+      "underlying": "0x894AB41c5353eB9795FFC44B412628eE1b2197FB",
+      "status": "deployed_unlisted",
+      "optionsToken": "0xcA2bc103CD18EC0b7646969dcB383D64037cb5bB",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "COIN",
+      "baseIndex": 8,
+      "underlying": "0x04D773Cc8C88895FA29380a09E90613bFABEB4D4",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x48E93EbC08ccaa3D3fC9E388bfEfD8209922D1cb",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "SPCX",
+      "baseIndex": 9,
+      "underlying": "0x973533762B5F0Fa16B15854A54a920Ce7560e926",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x0EAe421365011aE66dfa8bb9D1E8Baee54e5402d",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "MU",
+      "baseIndex": 10,
+      "underlying": "0xB694AC94B1f0C22013B66AF948A7F02E7Ed64daa",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x1868dB80a42E6D303E3A961886ba4534b6f56d40",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "SKHY",
+      "baseIndex": 11,
+      "underlying": "0x53FFa4E63165fc7ed5390e02277e4c0e36336c50",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x0a750ABB292C902D9752C5f508Ec6f5ec9Be7FCd",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "SNDK",
+      "baseIndex": 12,
+      "underlying": "0x467be03f40beE63606Ad208a100Fb14B5e9b7bFE",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x5dBd79079fc1abA28F0a270beEcD855aCda98c88",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "DRAM",
+      "baseIndex": 13,
+      "underlying": "0x9e5B63e8Dc02576A31b88DA04A14C5282D7a5bfd",
+      "status": "deployed_unlisted",
+      "optionsToken": "0xC3827d938c96232b3a08E83D71D084965Eb7e3Fb",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "META",
+      "baseIndex": 14,
+      "underlying": "0x126e5CdBc6D04880D7b17E1FC7bF44a39279d419",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x778d648c02c8F521bE22f903Fd2edb8bD6F34DFB",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "GOOGL",
+      "baseIndex": 15,
+      "underlying": "0xB00bC91af828AA279100b1D482aD4C07F80078b9",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x84d0040153e67618D49C49EDb3f50e6Ed8de0d7D",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "AAPL",
+      "baseIndex": 16,
+      "underlying": "0x08817cf3D786d36b56bFa1fc5F71273314468fb1",
+      "status": "deployed_unlisted",
+      "optionsToken": "0xCa103C4D4bb8CEf8bf3A8622b0a3fCA58d835118",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "CRCL",
+      "baseIndex": 17,
+      "underlying": "0x8d210Af1Ec489310c0A74d6eAa0cfa471F9De6cC",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x4A87676cbF3d0e725aeF3DaF8962Ea805Dda569e",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "AMZN",
+      "baseIndex": 18,
+      "underlying": "0x0Af16c8F8731FB9c0b8d4851e1509130CFbe5f68",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x53a0B4cB036BeCE074194171B3A6f885276d61C3",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "MSFT",
+      "baseIndex": 19,
+      "underlying": "0x3cD315EEf182EF06e0d12f4396AC50035AB4F211",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x9AA5a975b26432730173AEeAa20E9DD1C999Ee99",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
+    },
+    {
+      "ticker": "PLTR",
+      "baseIndex": 20,
+      "underlying": "0x2d7a46adE1FE818D3D00A915D7f38938AE0fb404",
+      "status": "deployed_unlisted",
+      "optionsToken": "0x3DbD73E6BE453E79D28968503bb88c6c5f7d12BA",
+      "implementation": "0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9"
     }
   ]
 }

@@ -1,5 +1,8 @@
 # Snapshot verification
 
+The initial snapshot and bootstrap below are historical records. The final
+PrimaryOracle and stock-token additions are recorded at the end of this document.
+
 2026-10-01. Source: CallPut main `928af0840f8c7a081b5db8f90f3dbe1c2824fdbb`.
 
 - All 126 Solidity files match the source commit byte-for-byte, including the
@@ -54,8 +57,34 @@ plugin's bundled artifacts rather than locally recompiled shells. No Solidity
 files changed. See the [deployment record](../robinhood-mainnet-deployment.md)
 and [manifest](../../deployments/robinhood-mainnet.json).
 
-Explorer source registration is pending (API HTTP 403). Nonzero real-USDG funding,
+At bootstrap, explorer source registration was pending (API HTTP 403). Nonzero real-USDG funding,
 smart-wallet funding and live trading were not part of this bootstrap. The local
 mock-token deposit/withdrawal rehearsal passed; application/service rollout is
 separate. Only public addresses, transaction records and verification metadata
 were exported; no credentials or private deployment tooling were copied.
+
+## Final oracle and stock-token additions
+
+Added the independent `PrimaryOracle.sol` placeholder; the original 126 files
+remain byte-identical to the upstream snapshot. The public package now contains
+127 Solidity files. Standalone compilation and ABI/storage compatibility passed.
+The existing proxy was upgraded in two transactions without changing its owner,
+authority or disabled primary-feed setting.
+
+Predeployed all 18 stock/ETF token pairs from Base in 36 transactions, reusing the
+OptionsToken implementation and ProxyAdmin. No market registration, token minting
+or trading activation was performed. Base metadata was matched on-chain; local
+36-creation rehearsal, permissions/initialization checks and read-only mainnet
+receipt/calldata/runtime verification passed. Opus reviewed each deployment batch;
+accepted preflight guards were applied and checked before broadcasting.
+
+Final transaction count: 236. Total gas: 0.002816924745948 ETH. Detailed source
+verification status is maintained in the README and deployment manifest.
+
+Source publication covers all 110 creation addresses: 100 are fully verified on
+Blockscout and 10 have exact creation/runtime matches on Sourcify. The remaining
+Blockscout submissions returned HTTP 500. Address-specific REST checks distinguish
+verified contracts from unverified contracts merely displaying a verified twin.
+All 36 stock/ETF creations and the current PrimaryOracle implementation are fully
+verified on Blockscout. The README highlights all 20 planned underlyings and
+distinguishes deployed token pairs from market activation.

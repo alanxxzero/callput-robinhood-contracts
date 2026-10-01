@@ -1,14 +1,34 @@
 # Robinhood mainnet deployment
 
-Verified at block **77336947** on chain **4663**. All **198 deployment and initialization transactions** succeeded.
+Deployed on chain **4663** with **236 successful transactions**: 198 bootstrap
+transactions, 2 oracle-upgrade transactions and 36 stock-token creations.
+Bootstrap checks passed at block **77336947**, oracle checks at **77364304** and
+stock-token checks at **77376626**.
 
-The total includes 73 contract creations (48 named contracts plus 25 shared proxy implementations) and 125 configuration calls. Deposit account v6 itself accounts for four transactions: implementation, beacon and factory creation, followed by beacon ownership transfer. Each transaction was submitted once; the RPC interruption was reconciled from its existing receipt without redeployment.
+The complete history contains 110 contract creations and 126 configuration calls.
+There are 84 named contracts and 26 implementation deployments, including the
+superseded Base placeholder. Deposit account v6 itself accounts for four
+transactions. Each transaction was submitted once; interruptions were reconciled
+from existing receipts without redeployment.
 
 The protocol and Deposit account v6 are deployed. Account creation remains under closed admission (`openToAll = false`). This is a contract bootstrap; liquidity, live prices, keepers, relayer, indexer and frontend rollout are separate.
 
 Initial deployer and admin: [`0x542e4610B63FcEDeF7e645dd12D1f7Ddf3d1E64E`](https://robinhoodchain.blockscout.com/address/0x542e4610B63FcEDeF7e645dd12D1f7Ddf3d1E64E). The same address owns ProxyAdmin and controls the account factory. Multisig migration is deferred. The account factory owns its upgradeable beacon.
 
-Total deployment gas paid: **0.00229202790167 ETH**. The cumulative reservation remained below the configured 0.02 ETH cap.
+Total gas paid: **0.002816924745948 ETH**, including the oracle upgrade and stock
+tokens. The cumulative reservation remained below the configured 0.02 ETH cap.
+
+## Final additions
+
+- The existing primary-oracle proxy now uses the independent `PrimaryOracle`
+  placeholder at `0x66cAAcF4F6635b553B2Ff984DCA1877c0fDAD324`. Its owner,
+  authority, proxy address and disabled-primary/enabled-spot configuration are
+  unchanged. No new price-feed behavior was introduced.
+- All 18 stock/ETF pairs from Base were predeployed using the existing ERC20 and
+  OptionsToken sources. The live Base inventory was checked at block **52033640**.
+  Underlying supply and options minted amount are zero. Market mappings and
+  Controller handlers remain unset; `nextUnderlyingAssetIndex` is still **3**.
+  See the [stock address table](../README.md#stock--etf-underlyings-18).
 
 ## Addresses
 
@@ -58,7 +78,7 @@ Use the **Address** column for proxy integrations; implementation addresses are 
 | `POSITION_VALUE_FEED` | `PositionValueFeed` | [`0x32847298142A9E692EfE1c259aADe4f260bDe94C`](https://robinhoodchain.blockscout.com/address/0x32847298142A9E692EfE1c259aADe4f260bDe94C) |
 | `SETTLE_PRICE_FEED` | `SettlePriceFeed` | [`0xB51EC03d51e8880FDc2A24f918072694516FB626`](https://robinhoodchain.blockscout.com/address/0xB51EC03d51e8880FDc2A24f918072694516FB626) |
 | `SPOT_PRICE_FEED` | `SpotPriceFeed` | [`0x2318040e26791777d675cFeF87FE25BDcE36439A`](https://robinhoodchain.blockscout.com/address/0x2318040e26791777d675cFeF87FE25BDcE36439A) |
-| `PRIMARY_ORACLE` | `BasePrimaryOracle` | [`0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B`](https://robinhoodchain.blockscout.com/address/0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B) |
+| `PRIMARY_ORACLE` | `PrimaryOracle` | [`0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B`](https://robinhoodchain.blockscout.com/address/0x9D1e3c557F3E3078dCBd8ac77Dfe1950db9B8c0B) |
 | `VIEW_AGGREGATOR` | `ViewAggregator` | [`0xf277D41cc8093667bf1A023f4FBbeB8328900bb7`](https://robinhoodchain.blockscout.com/address/0xf277D41cc8093667bf1A023f4FBbeB8328900bb7) |
 | `REFERRAL` | `Referral` | [`0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9`](https://robinhoodchain.blockscout.com/address/0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9) |
 | `TRADING_ACCOUNT_IMPL` | `TradingAccountSessionImpl` | [`0x2436A7575cf8A3289c7A07154f89f05660756312`](https://robinhoodchain.blockscout.com/address/0x2436A7575cf8A3289c7A07154f89f05660756312) |
@@ -78,8 +98,19 @@ Paxos USDG is the external deposit and settlement asset. The unchanged ABI names
 ## Verification
 
 - Every transaction receipt, nonce, calldata hash and canonical block matched the deployment record.
-- All 48 named CallPut contracts matched their expected runtime code. Proxy implementation bytecode matches the public build; immutable bindings were checked through getters.
+- All 48 bootstrap contracts matched their expected runtime code. Proxy implementation bytecode matches the public build; immutable bindings were checked through getters.
 - Transparent proxy and ProxyAdmin shells match the OpenZeppelin upgrades plugin’s bundled artifacts (`@openzeppelin/upgrades-core` 1.40.0), which differ from locally recompiled shells. Application implementations use the compiler settings in the README.
 - Admin and keeper roles, v6 factory/beacon wiring, closed admission and external/internal USDG configuration passed read-only mainnet checks.
+- The oracle upgrade preserves the previous storage and settings. All 36 stock
+  creations match their exact constructor/initializer data and runtime code;
+  receipts and canonical blocks were independently rechecked.
 
-**Explorer source registration is pending:** the explorer verification API returned HTTP 403. Explorer links do not claim verified-source status. Nonzero real-USDG funding, smart-wallet funding and live trading were not exercised in this bootstrap; local mock-token deposit/withdrawal rehearsal passed. This record is not an independent protocol audit.
+Sources for all 110 creation addresses are verified through Blockscout or Sourcify;
+see the [per-address verification results](../deployments/source-verification.json).
+Blockscout registration remains pending for 10 implementations after
+HTTP 500 responses from its authenticated API. Those contracts have exact
+creation and runtime matches on Sourcify, linked from the README.
+
+Nonzero real-USDG funding, smart-wallet funding and live trading were not exercised
+in this bootstrap; local mock-token deposit/withdrawal rehearsal passed. This
+record is not an independent protocol audit.

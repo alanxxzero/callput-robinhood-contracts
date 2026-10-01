@@ -24,4 +24,7 @@ transaction records only. The payment asset is Paxos USDG.
 - [x] Verify all 198 transactions and 48 named CallPut contracts on-chain.
 - [x] Publish actual addresses, implementation hashes and verification limits.
 
-Explorer source registration remains pending because its API returned HTTP 403.
+- [x] Add and deploy the common PrimaryOracle placeholder; retain the proxy address.
+- [x] Predeploy 18 Base stock/ETF token pairs and verify all 36 creations.
+- [x] Publish source-verification results and the 20-asset universe (100 Blockscout,
+  10 Sourcify exact matches; remaining Blockscout registration pending).

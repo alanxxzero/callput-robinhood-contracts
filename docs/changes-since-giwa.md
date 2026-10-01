@@ -4,8 +4,8 @@ Comparison against
 [`callput-giwa-contracts` at `6e142b82`](https://github.com/alanxxzero/callput-giwa-contracts/tree/6e142b82ec803d0caff4a6657643dc72e8649476)
 (2026-07-28). This compares published source trees, not live chain state.
 
-The latest snapshot contains **126 Solidity files: 112 unchanged, 3 changed and
-11 added**. No existing source file was removed.
+The latest snapshot contains **127 Solidity files: 112 unchanged, 3 changed and
+12 added**. No existing source file was removed.
 
 ## Added Deposit account sources
 
@@ -24,6 +24,12 @@ The latest snapshot contains **126 Solidity files: 112 unchanged, 3 changed and
 
 `peripherals/PublicFaucet.sol` is the eleventh addition. It is a testnet utility,
 separate from the Deposit account architecture, and is not a production token.
+
+`oracles/PrimaryOracle.sol` is the twelfth addition: a chain-neutral placeholder
+for deployments without a primary oracle. It preserves the Base placeholder's
+storage and behavior, with a neutral revert prefix. Robinhood uses it behind the
+existing oracle proxy with the primary feed disabled. Existing chain adapters
+are unchanged.
 
 ## Changed existing sources
 
