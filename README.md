@@ -86,8 +86,8 @@ For transparent proxies, integrations use the **Address** column;
 **Implementation** links point to the underlying logic contract. Multiple
 proxies of the same type can share an implementation.
 
-Explorer source-verification status is described in [Verification](#verification).
-An implementation link alone does not indicate explorer-verified source.
+All listed CallPut contracts are source-verified on Blockscout. See the
+[verified implementation list](#verified-implementations) below.
 
 ### Trading accounts
 
@@ -238,6 +238,56 @@ See the [address-by-address results](deployments/source-verification.json).
 
 See the [deployment verification record](docs/robinhood-mainnet-deployment.md)
 for transaction records, runtime hashes and the scope of completed checks.
+
+### Verified implementations
+
+The **26 unique current implementations** are listed below. Multiple proxies can
+share one implementation; all 20 OptionsTokens share the same ERC-1155 logic.
+`TradingAccountSessionImpl` v6 is the implementation configured in the trading
+account beacon.
+
+| # | Contract | Verified implementation |
+| --- | --- | --- |
+| 1 | OptionsMarket | [`0x100291F9Fc52CE39e177DfD6d4bC72aDF906A1d9`](https://robinhoodchain.blockscout.com/address/0x100291F9Fc52CE39e177DfD6d4bC72aDF906A1d9#code) |
+| 2 | Vault | [`0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d`](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| 3 | VaultUtils | [`0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7`](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| 4 | PositionManager | [`0x9D83c9f0581a695c5D1fbD7B41EB8ddc5143246D`](https://robinhoodchain.blockscout.com/address/0x9D83c9f0581a695c5D1fbD7B41EB8ddc5143246D#code) |
+| 5 | SettleManager | [`0x7B968a70467C1dc0553B84E0Fd7ef25c7B357A25`](https://robinhoodchain.blockscout.com/address/0x7B968a70467C1dc0553B84E0Fd7ef25c7B357A25#code) |
+| 6 | Controller | [`0x66C1F85b71eCA648E27B860213676f9116f5eE9A`](https://robinhoodchain.blockscout.com/address/0x66C1F85b71eCA648E27B860213676f9116f5eE9A#code) |
+| 7 | OptionsAuthority | [`0x8B4290fffB0700ee1618BBbA88299449E92fD022`](https://robinhoodchain.blockscout.com/address/0x8B4290fffB0700ee1618BBbA88299449E92fD022#code) |
+| 8 | VaultPriceFeed | [`0x5f549AAbE9586224988F23FE88f5f15a23224bf3`](https://robinhoodchain.blockscout.com/address/0x5f549AAbE9586224988F23FE88f5f15a23224bf3#code) |
+| 9 | FastPriceFeed | [`0x479B6Bf0A40c5359C68352B91e504977Ae65D7DC`](https://robinhoodchain.blockscout.com/address/0x479B6Bf0A40c5359C68352B91e504977Ae65D7DC#code) |
+| 10 | PositionValueFeed | [`0x60Acd6ca57b279065D8629d091cCEb891C5751F4`](https://robinhoodchain.blockscout.com/address/0x60Acd6ca57b279065D8629d091cCEb891C5751F4#code) |
+| 11 | SettlePriceFeed | [`0xfe3F5FF9e740AeD8213dc6327E1DdC13718D6702`](https://robinhoodchain.blockscout.com/address/0xfe3F5FF9e740AeD8213dc6327E1DdC13718D6702#code) |
+| 12 | SpotPriceFeed | [`0xd2BCAB3d76600e61c64FDba6726D495F1B6B92CB`](https://robinhoodchain.blockscout.com/address/0xd2BCAB3d76600e61c64FDba6726D495F1B6B92CB#code) |
+| 13 | PrimaryOracle | [`0x66cAAcF4F6635b553B2Ff984DCA1877c0fDAD324`](https://robinhoodchain.blockscout.com/address/0x66cAAcF4F6635b553B2Ff984DCA1877c0fDAD324#code) |
+| 14 | ViewAggregator | [`0x3E52762fAE476de0F70fE241f188dbAE0c90C2c8`](https://robinhoodchain.blockscout.com/address/0x3E52762fAE476de0F70fE241f188dbAE0c90C2c8#code) |
+| 15 | OlpManager | [`0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc`](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+| 16 | OptionsToken | [`0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9`](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
+| 17 | FastPriceEvents | [`0x049D3b6455a5E393a3C0761CfCFE75ff2221cbb6`](https://robinhoodchain.blockscout.com/address/0x049D3b6455a5E393a3C0761CfCFE75ff2221cbb6#code) |
+| 18 | Referral | [`0x51B48222a31413F1FD58C18Aa13b51c35020cB9c`](https://robinhoodchain.blockscout.com/address/0x51B48222a31413F1FD58C18Aa13b51c35020cB9c#code) |
+| 19 | FeeDistributor | [`0x9D441286DCf5e6aaE87706d88bc6Fa772D18847F`](https://robinhoodchain.blockscout.com/address/0x9D441286DCf5e6aaE87706d88bc6Fa772D18847F#code) |
+| 20 | USDG | [`0x355E932F8ED363cC3E3d7AB4F326F8553360229a`](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
+| 21 | OLP | [`0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706`](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
+| 22 | RewardTracker | [`0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48`](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
+| 23 | RewardDistributor | [`0x6090cd3cb1c8d46471A600f363237D0E3b4388cb`](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
+| 24 | RewardRouterV2 | [`0x306Da5cfa8640a989684432f5b2BC9a27E216E80`](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
+| 25 | OlpQueue | [`0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66`](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+| 26 | TradingAccountSessionImpl | [`0x2436A7575cf8A3289c7A07154f89f05660756312`](https://robinhoodchain.blockscout.com/address/0x2436A7575cf8A3289c7A07154f89f05660756312#code) |
+
+### Verified account infrastructure
+
+The factory and beacon are separate contracts, not proxy implementations.
+
+| Contract | Verified source |
+| --- | --- |
+| TradingAccountFactory | [`0xbcaC622Bb396B2f868b37D7C41F34695c9be1862`](https://robinhoodchain.blockscout.com/address/0xbcaC622Bb396B2f868b37D7C41F34695c9be1862#code) |
+| UpgradeableBeacon | [`0x5685d4DD5114c74C805322d4612CA5D73EAcdc62`](https://robinhoodchain.blockscout.com/address/0x5685d4DD5114c74C805322d4612CA5D73EAcdc62#code) |
+
+The stock/ETF underlying tokens and their OptionsToken proxies are listed
+[above](#stock--etf-underlyings-18). Their sources, all proxy shells and the
+superseded oracle implementation are included in the
+[complete 110-address verification report](deployments/source-verification.json).
 
 ## Build
 
