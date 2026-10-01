@@ -2,11 +2,23 @@
 
 CallPut is an on-chain options protocol with pooled liquidity, keeper-executed
 orders and cash settlement. This repository contains the latest protocol and
-**Deposit & Trade** smart contracts prepared for Robinhood Chain review.
+**Deposit & Trade** smart contracts deployed on Robinhood Chain.
 
-**Status: deployment pending.** The target is Robinhood **mainnet (chain 4663)**,
-using **Paxos USDG** as the settlement asset. No deployed CallPut addresses or
-explorer verification are claimed yet.
+**Deployed on Robinhood mainnet (chain 4663)** using **Paxos USDG** as the
+settlement asset. All 198 deployment/initialization transactions and 48 named
+CallPut contracts passed receipt, runtime-code and configuration checks.
+Account admission remains closed; the application is not launched by this
+contract bootstrap. Explorer source registration is pending (verification API HTTP 403).
+
+See the [full address list and verification record](docs/robinhood-mainnet-deployment.md)
+or [JSON manifest](deployments/robinhood-mainnet.json).
+
+| Contract | Mainnet address |
+| --- | --- |
+| Trading account factory | [`0xbcaC622Bb396B2f868b37D7C41F34695c9be1862`](https://robinhoodchain.blockscout.com/address/0xbcaC622Bb396B2f868b37D7C41F34695c9be1862) |
+| Trading account implementation (v6) | [`0x2436A7575cf8A3289c7A07154f89f05660756312`](https://robinhoodchain.blockscout.com/address/0x2436A7575cf8A3289c7A07154f89f05660756312) |
+| Trading account beacon | [`0x5685d4DD5114c74C805322d4612CA5D73EAcdc62`](https://robinhoodchain.blockscout.com/address/0x5685d4DD5114c74C805322d4612CA5D73EAcdc62) |
+| Position manager | [`0x426a6b482893557E58cF38de635fEbB30Fd6a3C3`](https://robinhoodchain.blockscout.com/address/0x426a6b482893557E58cF38de635fEbB30Fd6a3C3) |
 
 ## Source snapshot
 
@@ -122,18 +134,19 @@ This is an existing third-party token, **not** a CallPut deployment.
 See [Paxos's token registry](https://docs.paxos.com/guides/stablecoin/usdg/mainnet).
 
 The shared contract ABI retains names such as `USDC` and `core.usdc`; on
-Robinhood those settlement-token slots will reference Paxos USDG. This preserves
+Robinhood those settlement-token slots reference Paxos USDG. This preserves
 the existing contract code and does not rename or replace the internal vault
 tokens. Off-chain integrations must configure USDG's address, symbol, decimals
 and signing domain explicitly. CCTP is not part of this deployment scope.
 
-The settlement token must support any authorization/permit funding method
-enabled by the integration. Deployment also requires the correct core addresses,
-oracle wiring, authorities, factory/beacon setup and implementation hashes.
-Published addresses and explorer verification should be added after that release.
+Before enabling funding methods in the application, complete nonzero real-USDG
+and smart-wallet integration checks. The deployment record distinguishes local
+mock-token rehearsal, read-only mainnet checks and explorer source registration.
 
-The snapshot is not an independent audit report or a claim of on-chain bytecode
-equivalence. Existing deployments may use earlier implementations.
+Application implementation bytecode matches this build, with immutable bindings
+checked on-chain. Transparent proxy and ProxyAdmin shells use the deployment
+plugin's bundled OpenZeppelin artifacts, as documented in the verification record.
+This snapshot and deployment record are not an independent protocol audit.
 
 ## License
 

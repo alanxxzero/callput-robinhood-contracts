@@ -10,12 +10,18 @@ CallPut source. Create a fresh history authored only by `alanxxzero`.
 - [x] Pin build dependencies and validate the standalone package without
   environment files, RPC connections or wallet credentials. The complete build
   passed after increasing the initial 600-second execution window.
-- [ ] Verify source parity, publication contents and commit attribution; publish.
+- [x] Verify source parity, publication contents and commit attribution; publish.
 
-No contract logic changes, live deployment, address manifest, application code,
-private history or internal operating records are included. Preserve upstream
-license notices. Reuse existing source-review evidence; validate the new package.
+No contract logic changes, application code, private history or internal operating
+records are included. Preserve upstream license notices. Reuse existing
+source-review evidence; validate the new package.
 
-Alan subsequently requested mainnet deployment. Deployment scripts are prepared
-in the separate CallPut monorepo worktree. The payment asset is Paxos USDG;
-deployed CallPut addresses will be added only after on-chain verification.
+Alan subsequently requested mainnet deployment. Scripts remain in the separate
+CallPut monorepo worktree; this repository publishes verified addresses and
+transaction records only. The payment asset is Paxos USDG.
+
+- [x] Deploy the current core protocol and Deposit v6 to chain 4663.
+- [x] Verify all 198 transactions and 48 named CallPut contracts on-chain.
+- [x] Publish actual addresses, implementation hashes and verification limits.
+
+Explorer source registration remains pending because its API returned HTTP 403.

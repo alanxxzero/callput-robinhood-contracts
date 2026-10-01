@@ -10,7 +10,8 @@
   "target": "Robinhood Chain",
   "targetChainId": 4663,
   "settlementToken": "Paxos USDG",
-  "deploymentStatus": "pending",
+  "deploymentStatus": "deployed_admission_closed",
   "referenceRepository": "alanxxzero/callput-giwa-contracts",
-  "referenceCommit": "6e142b82ec803d0caff4a6657643dc72e8649476"
+  "referenceCommit": "6e142b82ec803d0caff4a6657643dc72e8649476",
+  "deploymentManifest": "deployments/robinhood-mainnet.json"
 }

@@ -7,8 +7,8 @@
 - Against the 2026-07-28 Giwa repository: 112 unchanged files, 3 changed files,
   11 additions, no removals. See the [change inventory](../changes-since-giwa.md).
 - README describes both transparent core proxies and beacon trading accounts.
-  No Robinhood CallPut deployment, explorer match or independent audit is claimed.
-  Mainnet chain 4663 and external Paxos USDG are the selected deployment target.
+  Mainnet deployment and runtime comparison are now recorded separately; no
+  explorer verified-source status or independent protocol audit is claimed.
 - Package versions and lockfile agree: Hardhat 2.22.18, solc 0.8.16 and
   OpenZeppelin Contracts 4.9.6. Local compiler selection follows the
   [Hardhat 2 guide](https://v2.hardhat.org/hardhat-runner/docs/other-guides/using-custom-solc).
@@ -36,4 +36,26 @@ passed. Existing Solidity compiler warnings remain; no warning-free claim.
 Source review evidence is inherited from the unchanged upstream implementation;
 this export is not a new protocol audit.
 Foundry is not installed in the publishing environment, so no Forge result is
-claimed. Publication uses a new history with `alanxxzero` as author and committer.
+claimed. Published at `alanxxzero/callput-robinhood-contracts`, initial commit
+`07df3f75293cf34faabb999dc41fb1d031a2c73c`. GitHub confirmed `alanxxzero` as
+the only contributor and as both commit author and committer.
+
+## Mainnet deployment
+
+The authorized bootstrap completed on chain 4663: all 198 transactions succeeded.
+Read-only verification matched every receipt, nonce, calldata hash and canonical
+block, and all 48 named CallPut contract runtimes and implementation bindings.
+Admin/keeper roles, account v6, factory/beacon wiring, closed admission and USDG
+configuration passed. Total gas paid: 0.00229202790167 ETH.
+
+All 154 compiler source units and application runtime bytecodes match the public
+standalone build. OpenZeppelin proxy/admin shells match the actual deployment
+plugin's bundled artifacts rather than locally recompiled shells. No Solidity
+files changed. See the [deployment record](../robinhood-mainnet-deployment.md)
+and [manifest](../../deployments/robinhood-mainnet.json).
+
+Explorer source registration is pending (API HTTP 403). Nonzero real-USDG funding,
+smart-wallet funding and live trading were not part of this bootstrap. The local
+mock-token deposit/withdrawal rehearsal passed; application/service rollout is
+separate. Only public addresses, transaction records and verification metadata
+were exported; no credentials or private deployment tooling were copied.
