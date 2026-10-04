@@ -9,7 +9,9 @@
 [![Verified](https://img.shields.io/badge/Blockscout-110%2F110%20verified-2ea44f)](deployments/source-verification.json)
 [![License](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 
-[Website](https://callput.app) · [App](https://app.callput.app) · [Docs](https://docs.callput.app) · [X](https://x.com/CallPutApp)
+[Website](https://robin.callput.app) · [Docs](https://docs.callput.app) · [X](https://x.com/CallPutApp)
+
+[Status](#implementation-and-deployment-status) · [Addresses](#deployed-addresses) · [Manifest](deployments/robinhood-mainnet.json) · [Reproduce](#how-to-reproduce)
 
 </div>
 
@@ -20,24 +22,61 @@ and every leg's strike and side. Liquidity vaults underwrite the other side,
 fully collateralized, and pay out in USDG at expiry.
 
 This repository contains the Solidity source, build configuration and verified
-deployment for **Robinhood Chain mainnet**. Options cover BTC and ETH as well as
-**14 US stocks and 4 ETFs**, settled in **Paxos USDG**. CallPut on Base runs the
-same contract codebase.
+deployment for **Robinhood Chain mainnet**. Contracts cover **BTC, ETH, 14 stocks
+and 4 ETFs**, with **Paxos USDG** as the deposit and settlement asset. Core designs
+are shared with CallPut on Base; deployments and operating settings are separate.
+
+## Implementation and deployment status
+
+Read-only checks on **2026-10-05 KST** (2026-10-04 15:38 UTC), at Robinhood block
+[80047504](https://robinhoodchain.blockscout.com/block/80047504), confirmed the
+account policy and market bindings below. The app and its public market-data
+endpoint also responded; no funded user transaction was submitted for this check.
+
+### Implemented and deployed
+
+| Area | Scope / checked state |
+| --- | --- |
+| Contracts and verification | Core protocol, S/M/L pools and account v6 deployed. The [verification report](deployments/source-verification.json) records all 110 deployment addresses as source-verified on 2026-10-01. |
+| Deposit & Trade | Account creation, USDG deposits, owner-authorized withdrawals and scoped session trading implemented. Public trading admission is enabled (`openToAll = true`, `safeMode = false`). |
+| Open, close and settle | Four vertical-spread strategies enabled (`allowedStrategiesMask = 0x1e0`); ERC-1155 positions support early close and expiry settlement. |
+| Asset deployment and listing | **20 OptionsTokens deployed; all 20 underlyings registered and active.** Every market mapping matches the manifest and every OptionsToken authorizes the Controller. |
+| Application and market data | [Robinhood app](https://robin.callput.app) deployed; [market data](https://app-data-robinhood.s3.ap-southeast-1.amazonaws.com/market-data.json) publishes all 20 assets. The app uses separately operated relay, keeper and indexing services. |
+| Liquidity | S pool funded: approximately 9,999 USDG in `poolAmounts` at the checked block. This is pool accounting, not a guarantee of available capacity for an order. |
+
+### Not enabled, pending or outside this repository
+
+| Area | Limitation / remaining work |
+| --- | --- |
+| M/L pool trading | Pool contracts are deployed, but both had zero USDG `poolAmounts` at the checked block. Expiries routed to them need liquidity before orders can execute. |
+| Additional strategies | Single-leg strategies are disabled. Four-leg token encoding does not imply butterfly/condor trading is implemented. |
+| Rewards and referrals UI | The on-chain Referral contract is deployed; the Rewards interface and redesigned points program are not launched. |
+| Full-stack reproduction | This is a contract-only repository: no frontend, relay/keeper services or automated end-to-end trading runner is included. Use the hosted app for the manual flow below. |
+| Funded end-to-end verification | Build, deployment and read-only checks are documented. A complete funded deposit → open → close/settle → withdrawal was not performed for this README update. |
+
+**Historical records:** the [manifest](deployments/robinhood-mainnet.json),
+[source metadata](SOURCE.json) and [bootstrap record](docs/robinhood-mainnet-deployment.md)
+describe the 2026-10-01 contract bootstrap. Their closed-admission and unlisted-stock
+labels predate the service rollout; they are not the current market state.
+Deployment, market activation and the ability to fill an order are separate:
+trading also depends on market hours, a valid expiry, fresh prices and pool capacity.
 
 ## Highlights
 
 | | |
 | --- | --- |
 | **Strategies as tokens** | A vertical spread is one token, not two loose legs. The 256-bit token ID is the full term sheet. See [Option tokens](#option-tokens). |
-| **Real-world asset options** | Calls, puts and spreads on US equities and ETFs (NVDA, TSLA, AAPL, SPY, QQQ …) next to BTC and ETH. |
+| **Real-world asset options** | Call and put spreads on equities and ETFs (NVDA, TSLA, AAPL, SPY, QQQ …) next to BTC and ETH. |
 | **Fully collateralized** | The maximum payout is reserved in the vault when a position opens. Spreads cap the loss on both sides. |
 | **Pooled liquidity** | LPs underwrite options across three vaults (S / M / L) and earn premiums and fees. |
 | **Self-custodial one-click trading** | Each user gets a smart trading account with scoped session keys. Only the owner can withdraw. |
-| **Verifiable** | All 110 deployed addresses are source-verified on Blockscout and rebuild from this repository. |
+| **Verifiable** | Source, compiler settings and address-by-address Blockscout verification for the 110 published deployment addresses. |
 
 ## Options underlyings — 20 assets
 
-**BTC · ETH · 14 stocks · 4 ETFs** — CallPut's full asset universe on Robinhood Chain.
+**BTC · ETH · 14 stocks · 4 ETFs** — all 20 have deployed option-token contracts
+and active market registration at the checked block. Available expiries and
+quotes are shown in the app; stock/ETF trading follows configured market hours.
 
 | Category | Underlyings |
 | --- | --- |
@@ -111,11 +150,14 @@ has a defined maximum loss and a defined maximum payout.
   balance. Whoever holds the token owns the payoff. Positions move with a
   standard ERC-1155 transfer: to another wallet, through OTC or on any
   ERC-1155 marketplace.
-- **Room to grow.** The format already has four leg slots and a 16-value strategy
-  field (eight in use). Multi-leg structures such as butterflies and condors fit
-  without changing the token format.
+- **Room to grow.** The format has four leg slots and a 16-value strategy field
+  (eight defined). Additional multi-leg strategies would still need strategy
+  recognition, pricing, risk checks and activation; they are not enabled today.
 
 ## How a trade works
+
+The diagram describes the contract flow. Follow [How to reproduce](#how-to-reproduce)
+for reviewer prerequisites, app steps and expected results.
 
 ```mermaid
 sequenceDiagram
@@ -209,6 +251,10 @@ require the owner. Referrals are registered by the trading account. The factory
 controls account admission and beacon upgrades; the beacon points to account
 implementation **v6**.
 
+The current app exposes one trading account per connected wallet. The factory's
+registered-account limit is **10 per owner** at the checked block; additional
+account creation and switching are not exposed in the app.
+
 ## Robinhood mainnet
 
 | Setting | Value |
@@ -219,7 +265,8 @@ implementation **v6**.
 | Gas token | ETH |
 | Settlement asset | Paxos USDG (6 decimals) |
 | Enabled strategies | Buy/Sell Call Spread, Buy/Sell Put Spread |
-| Underlyings | 20: BTC, ETH, 14 stocks, 4 ETFs |
+| Underlyings | 20 deployed and registered: BTC, ETH, 14 stocks, 4 ETFs |
+| Account access | Public trading admission enabled at the checked block; owner authorization and funded-account registration still required |
 
 ## Deployed addresses
 
@@ -325,6 +372,8 @@ Each pool has its own vault, accounting/LP tokens and reward contracts.
 Each underlying is a zero-supply ERC-20 identifier with a matching `OptionsToken`
 proxy, reusing the BTC/ETH OptionsToken implementation. The underlying tokens
 are protocol identifiers; they do not represent ownership of shares or ETF units.
+The 18 pairs were initially predeployed, then registered and activated during
+the service rollout. See [current status](#implementation-and-deployment-status).
 
 | Underlying | Underlying address | OptionsToken address |
 | --- | --- | --- |
@@ -433,16 +482,22 @@ superseded oracle implementation are included in the
 
 ## Build
 
+Prerequisites: Git, Node.js and npm. Pin the published contract snapshot before
+installing dependencies; this README update does not change its Solidity or build files.
+
 ```sh
 git clone https://github.com/alanxxzero/callput-robinhood-contracts.git
 cd callput-robinhood-contracts
+git checkout 8655e3eb1b3f1fcb261a0b6c14c3633601970eab
 npm ci
 npm run compile
 ```
 
 Hardhat uses the pinned local `solc` WASM compiler. After dependency installation,
 compilation needs no RPC connection, wallet key or compiler download. The first
-optimized build can take several minutes.
+optimized build can take several minutes. Expected result: successful compilation
+and generated `artifacts/`. The npm scripts are `compile` and `clean`; neither
+starts a local trading service.
 
 | Setting | Value |
 | --- | --- |
@@ -456,6 +511,63 @@ optimized build can take several minutes.
 Compiler settings agree in [hardhat.config.js](hardhat.config.js) and
 [foundry.toml](foundry.toml). Dependencies are pinned in
 [package-lock.json](package-lock.json).
+
+## How to reproduce
+
+### 1. Build the pinned snapshot
+
+Run the [Build](#build) commands above. This verifies the standalone contract
+build; it does not start the app or deploy contracts. No wallet or funds are needed.
+
+### 2. Verify the network and deployment
+
+With `curl`, run these read-only calls against the public RPC:
+
+```sh
+curl --silent --show-error --fail --max-time 30 \
+  -H 'Content-Type: application/json' \
+  --data '{"jsonrpc":"2.0","id":1,"method":"eth_chainId","params":[]}' \
+  https://rpc.mainnet.chain.robinhood.com
+
+curl --silent --show-error --fail --max-time 30 \
+  -H 'Content-Type: application/json' \
+  --data '{"jsonrpc":"2.0","id":2,"method":"eth_getCode","params":["0xbcaC622Bb396B2f868b37D7C41F34695c9be1862","latest"]}' \
+  https://rpc.mainnet.chain.robinhood.com
+```
+
+Expected: `0x1237` (chain ID **4663**) and non-empty factory bytecode, not `0x`.
+An RPC error or timeout is not a successful check. Compare addresses and source
+verification with the [manifest](deployments/robinhood-mainnet.json) and
+[verification report](deployments/source-verification.json); code presence alone
+does not establish source equivalence or trading readiness.
+
+For current access, read `openToAll()` and `safeMode()` on the
+[factory](https://robinhoodchain.blockscout.com/address/0xbcaC622Bb396B2f868b37D7C41F34695c9be1862).
+Public trading requires admission, registration and safe mode to permit it.
+Creating an empty account alone does not authorize trading.
+
+### 3. Reproduce a trade in the hosted app
+
+**Access and funding:** use an email login or wallet in a supported territory,
+and real [Paxos USDG on Robinhood](#external-assets). There is no test-token faucet
+for this mainnet flow. A wallet sending a deposit needs ETH for that transfer;
+the app's relay sponsors supported setup, trading and withdrawal operations.
+Execution still requires a valid session, live keepers/prices, an open market
+and sufficient liquidity in the pool serving the selected expiry.
+
+| Step | Action | Expected result |
+| --- | --- | --- |
+| 1. Connect | Open [robin.callput.app](https://robin.callput.app), confirm **Robinhood** in the chain selector and choose **Connect**. Complete the Deposit & Trade account setup and session authorization prompts. | The app shows your **CallPut Account**, distinct from your connected wallet. |
+| 2. Deposit | Choose **Deposit**. Transfer Robinhood USDG from your wallet, or send it to the displayed CallPut Account deposit address on the same network. | After confirmation, the account's available balance updates. |
+| 3. Open | Select BTC or ETH, an unexpired market, and an enabled vertical spread (for example, Buy Call Spread). Choose two strikes and an amount within the displayed balance and liquidity limits; review and submit. Start with an expiry served by the funded S pool. | The request is accepted, then executed by a keeper. An accepted request is not yet a filled position. |
+| 4. Verify | Wait for the position to appear, then inspect its execution transaction on Blockscout. | The account receives an ERC-1155 OptionsToken balance with the selected underlying, expiry and strategy. |
+| 5. Close or settle | Close an executable position before expiry, or wait for expiry and its settlement price, then choose **Settle**. | The position balance decreases; any resulting USDG is credited to the CallPut Account. |
+| 6. Withdraw | Choose **Withdraw**, check the receiver on Robinhood, and authorize with the owner wallet. | Confirmed USDG arrives at the receiver; a trading session key cannot authorize this withdrawal. |
+
+Use the app's current dates, strikes and quotes. If there is no executable quote
+or pool capacity, that trade cannot be reproduced until those conditions are met.
+These are manual reproduction steps, not a claim that a funded end-to-end test
+was performed for this documentation update.
 
 ## Source
 
