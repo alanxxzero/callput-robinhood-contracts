@@ -18,8 +18,8 @@
 CallPut is an options protocol where **every position is a token**. A trader
 buys or sells a call, a put or a complete vertical spread, and receives a single
 ERC-1155 token whose ID encodes the full contract: underlying, expiry, strategy
-and every leg's strike and side. Liquidity vaults underwrite the other side,
-fully collateralized, and pay out in USDG at expiry.
+and every leg's strike and side. A shared liquidity vault underwrites the other
+side, fully collateralized, and pays out in USDG at expiry.
 
 This repository contains the Solidity source, build configuration and verified
 deployment for **Robinhood Chain mainnet**. Contracts cover **BTC, ETH, 14 stocks
@@ -37,18 +37,17 @@ endpoint also responded; no funded user transaction was submitted for this check
 
 | Area | Scope / checked state |
 | --- | --- |
-| Contracts and verification | Core protocol, S/M/L pools and account v6 deployed. The [verification report](deployments/source-verification.json) records all 110 deployment addresses as source-verified on 2026-10-01. |
+| Contracts and verification | Core protocol, liquidity pool and account v6 deployed. The [verification report](deployments/source-verification.json) records all 110 deployment addresses as source-verified on 2026-10-01. |
 | Deposit & Trade | Account creation, USDG deposits, owner-authorized withdrawals and scoped session trading implemented. Public trading admission is enabled (`openToAll = true`, `safeMode = false`). |
 | Open, close and settle | Four vertical-spread strategies enabled (`allowedStrategiesMask = 0x1e0`); ERC-1155 positions support early close and expiry settlement. |
 | Asset deployment and listing | **20 OptionsTokens deployed; all 20 underlyings registered and active.** Every market mapping matches the manifest and every OptionsToken authorizes the Controller. |
 | Application and market data | [Robinhood app](https://robin.callput.app) deployed; [market data](https://app-data-robinhood.s3.ap-southeast-1.amazonaws.com/market-data.json) publishes all 20 assets. The app uses separately operated relay, keeper and indexing services. |
-| Liquidity | S pool funded: approximately 9,999 USDG in `poolAmounts` at the checked block. This is pool accounting, not a guarantee of available capacity for an order. |
+| Liquidity | The liquidity pool is funded: approximately 9,999 USDG in `poolAmounts` at the checked block. This is pool accounting, not a guarantee of available capacity for an order. |
 
 ### Not enabled, pending or outside this repository
 
 | Area | Limitation / remaining work |
 | --- | --- |
-| M/L pool trading | Pool contracts are deployed, but both had zero USDG `poolAmounts` at the checked block. Expiries routed to them need liquidity before orders can execute. |
 | Additional strategies | Single-leg strategies are disabled. Four-leg token encoding does not imply butterfly/condor trading is implemented. |
 | Rewards and referrals UI | The on-chain Referral contract is deployed; the Rewards interface and redesigned points program are not launched. |
 | Full-stack reproduction | This is a contract-only repository: no frontend, relay/keeper services or automated end-to-end trading runner is included. Use the hosted app for the manual flow below. |
@@ -68,7 +67,7 @@ trading also depends on market hours, a valid expiry, fresh prices and pool capa
 | **Strategies as tokens** | A vertical spread is one token, not two loose legs. The 256-bit token ID is the full term sheet. See [Option tokens](#option-tokens). |
 | **Real-world asset options** | Call and put spreads on equities and ETFs (NVDA, TSLA, AAPL, SPY, QQQ …) next to BTC and ETH. |
 | **Fully collateralized** | The maximum payout is reserved in the vault when a position opens. Spreads cap the loss on both sides. |
-| **Pooled liquidity** | LPs underwrite options across three vaults (S / M / L) and earn premiums and fees. |
+| **Pooled liquidity** | LPs underwrite options through one shared USDG liquidity pool and earn premiums and fees. |
 | **Self-custodial one-click trading** | Each user gets a smart trading account with scoped session keys. Only the owner can withdraw. |
 | **Verifiable** | Source, compiler settings and address-by-address Blockscout verification for the 110 published deployment addresses. |
 
@@ -105,7 +104,7 @@ instrument into 256 bits:
 | 145 – 98 | Leg 2 | 48 |
 | 97 – 50 | Leg 3 | 48 |
 | 49 – 2 | Leg 4 | 48 |
-| 1 – 0 | Vault index (S / M / L) | 2 |
+| 1 – 0 | Vault index | 2 |
 
 Any contract, indexer or wallet can read the terms straight from the ID:
 
@@ -195,7 +194,7 @@ flowchart LR
         C --> OM[OptionsMarket]
         SM[SettleManager]
     end
-    subgraph Liquidity["Liquidity — S / M / L"]
+    subgraph Liquidity["Shared liquidity pool"]
         V[Vault] --- VU[VaultUtils]
         OLP[OlpManager · OLP · rewards] --> V
     end
@@ -222,7 +221,7 @@ flowchart LR
 | --- | --- | --- |
 | Trading accounts | `TradingAccountFactory`, `TradingAccountSessionImpl` | Account creation, custody, owner withdrawals and session trading |
 | Options market | `OptionsMarket`, `PositionManager`, `Controller` | Markets, order execution and position accounting |
-| Liquidity | `Vault`, `VaultUtils`, `OlpManager` | S/M/L pools and liquidity management |
+| Liquidity | `Vault`, `VaultUtils`, `OlpManager` | Shared liquidity pool and liquidity management |
 | Settlement | `SettleManager`, `SettlePriceFeed` | Expiry settlement and settlement prices |
 | Pricing | `SpotPriceFeed`, `FastPriceFeed`, `VaultPriceFeed`, `PositionValueFeed` | Price inputs and option valuation |
 | Tokens and rewards | `OptionsToken`, `USDG`, `OLP`, reward contracts | ERC-1155 positions, pool accounting, LP tokens and rewards |
@@ -272,6 +271,8 @@ account creation and switching are not exposed in the app.
 
 Addresses and implementation links below come from the
 [mainnet deployment manifest](deployments/robinhood-mainnet.json).
+The tables below cover contracts used by the current service. The manifest
+retains the complete deployment inventory, including legacy contracts.
 For transparent proxies, integrations use the **Address** column;
 **Implementation** links point to the underlying logic contract. Multiple
 proxies of the same type can share an implementation.
@@ -303,21 +304,16 @@ account addresses are created through the factory.
 | Referral | [`0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9`](https://robinhoodchain.blockscout.com/address/0xBa64c819A8C5a80E51ce5f929C3BF08DD187D6c9) | [impl](https://robinhoodchain.blockscout.com/address/0x51B48222a31413F1FD58C18Aa13b51c35020cB9c#code) |
 | FeeDistributor | [`0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41`](https://robinhoodchain.blockscout.com/address/0x42260a98bc6e1AA2f4CEC5508146d713BfD72c41) | [impl](https://robinhoodchain.blockscout.com/address/0x9D441286DCf5e6aaE87706d88bc6Fa772D18847F#code) |
 
-### Liquidity pools
+### Liquidity pool
 
 | Contract | Address (explorer) | Implementation |
 | --- | --- | --- |
-| Vault — S | [`0x21bA39e9394657A6196f6948C2701D9fD9612289`](https://robinhoodchain.blockscout.com/address/0x21bA39e9394657A6196f6948C2701D9fD9612289) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
-| Vault — M | [`0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE`](https://robinhoodchain.blockscout.com/address/0xA60e4A30c8D56C81c7E7c607a9E092cEb25241eE) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
-| Vault — L | [`0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897`](https://robinhoodchain.blockscout.com/address/0xCaf6Cf834Dc1b0C86206B6e9E797f5D27ca63897) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
-| VaultUtils — S | [`0xfB970601A11254bA465fE52eC88546299E1E002c`](https://robinhoodchain.blockscout.com/address/0xfB970601A11254bA465fE52eC88546299E1E002c) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
-| VaultUtils — M | [`0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066`](https://robinhoodchain.blockscout.com/address/0x5B52c79Cc4E7c09BF51716C37fd6301aEB793066) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
-| VaultUtils — L | [`0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573`](https://robinhoodchain.blockscout.com/address/0x05cfa0574F4daA5B2d3Fd9E6c25ffe725f38b573) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
-| OlpManager — S | [`0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8`](https://robinhoodchain.blockscout.com/address/0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
-| OlpManager — M | [`0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b`](https://robinhoodchain.blockscout.com/address/0x7eBbdF7ffCaB33e244D465E7FA08756Fd7F7738b) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
-| OlpManager — L | [`0x887Af039C15CCe9636195C80254B46a8Faf03FDc`](https://robinhoodchain.blockscout.com/address/0x887Af039C15CCe9636195C80254B46a8Faf03FDc) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
+| Vault | [`0x21bA39e9394657A6196f6948C2701D9fD9612289`](https://robinhoodchain.blockscout.com/address/0x21bA39e9394657A6196f6948C2701D9fD9612289) | [impl](https://robinhoodchain.blockscout.com/address/0x9954964Af61DC7Ba9e82B7A7C5A6bF7caB54358d#code) |
+| VaultUtils | [`0xfB970601A11254bA465fE52eC88546299E1E002c`](https://robinhoodchain.blockscout.com/address/0xfB970601A11254bA465fE52eC88546299E1E002c) | [impl](https://robinhoodchain.blockscout.com/address/0xdc813f312ce0f92C69C996cD6Df53cb90d41b7c7#code) |
+| OlpManager | [`0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8`](https://robinhoodchain.blockscout.com/address/0xbed7fB763bb9391e45AD2c70FE19887CAD7Ec9B8) | [impl](https://robinhoodchain.blockscout.com/address/0x4eD46e1df37dbfE9B0D31137a912e78D997f72Dc#code) |
 
-Each pool has its own vault, accounting/LP tokens and reward contracts.
+The service uses one pool: the vault and its accounting, LP and reward contracts
+use the `S_` keys in the deployment manifest.
 
 ### Oracles
 
@@ -337,33 +333,21 @@ Each pool has its own vault, accounting/LP tokens and reward contracts.
 | --- | --- | --- |
 | OptionsToken — BTC | [`0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500`](https://robinhoodchain.blockscout.com/address/0x080084D6A1e9b6657EDc8DBa071BAa9D15Fcc500) | [impl](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
 | OptionsToken — ETH | [`0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02`](https://robinhoodchain.blockscout.com/address/0x84D4ef4062E00F78B0Ea5aaC06D7D08Ab1258B02) | [impl](https://robinhoodchain.blockscout.com/address/0x8ba18F54908852A798BC8e1aB28235FfeeD5DFc9#code) |
-| USDG — S | [`0xb4193D3618E45231A3D4a73600170ef5cbF62E0F`](https://robinhoodchain.blockscout.com/address/0xb4193D3618E45231A3D4a73600170ef5cbF62E0F) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
-| USDG — M | [`0x4E4E9EF8f0170fb9190608816068610E6e9D9184`](https://robinhoodchain.blockscout.com/address/0x4E4E9EF8f0170fb9190608816068610E6e9D9184) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
-| USDG — L | [`0x42A7D4dcd0c84ee14547d3C738D40C14D7f66fA4`](https://robinhoodchain.blockscout.com/address/0x42A7D4dcd0c84ee14547d3C738D40C14D7f66fA4) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
-| OLP — S | [`0x463811B783f53c7adf01Bc51aFb7880b6d95A5d5`](https://robinhoodchain.blockscout.com/address/0x463811B783f53c7adf01Bc51aFb7880b6d95A5d5) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
-| OLP — M | [`0xcc0BA1Bbc4D0625bDb6c16A935bF1317788d39D1`](https://robinhoodchain.blockscout.com/address/0xcc0BA1Bbc4D0625bDb6c16A935bF1317788d39D1) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
-| OLP — L | [`0xc163528C97d005b70095E2DD20e582F6408Cc96c`](https://robinhoodchain.blockscout.com/address/0xc163528C97d005b70095E2DD20e582F6408Cc96c) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
+| USDG | [`0xb4193D3618E45231A3D4a73600170ef5cbF62E0F`](https://robinhoodchain.blockscout.com/address/0xb4193D3618E45231A3D4a73600170ef5cbF62E0F) | [impl](https://robinhoodchain.blockscout.com/address/0x355E932F8ED363cC3E3d7AB4F326F8553360229a#code) |
+| OLP | [`0x463811B783f53c7adf01Bc51aFb7880b6d95A5d5`](https://robinhoodchain.blockscout.com/address/0x463811B783f53c7adf01Bc51aFb7880b6d95A5d5) | [impl](https://robinhoodchain.blockscout.com/address/0x67FCdaB641Ab053DB3bcA63dC4d8ee5c12260706#code) |
 
-`OptionsToken` is ERC-1155. `S_USDG`, `M_USDG` and `L_USDG` are internal
-18-decimal vault accounting tokens; `OLP` tokens represent pool liquidity.
+`OptionsToken` is ERC-1155. The internal `S_USDG` token uses 18 decimals for
+vault accounting; `S_OLP` represents liquidity in the service pool.
 
 <details>
 <summary>Reward and liquidity queue contracts</summary>
 
 | Contract | Address (explorer) | Implementation |
 | --- | --- | --- |
-| RewardTracker — S | [`0x6b8979E1662a1e7524ecBBA625AA31cf87247Ea5`](https://robinhoodchain.blockscout.com/address/0x6b8979E1662a1e7524ecBBA625AA31cf87247Ea5) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
-| RewardTracker — M | [`0xC7223e6F948C0804D62FfC4FD33A02225A743A1D`](https://robinhoodchain.blockscout.com/address/0xC7223e6F948C0804D62FfC4FD33A02225A743A1D) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
-| RewardTracker — L | [`0x0899213428E3eF7f1D590e37BF8363E19Cc27f4e`](https://robinhoodchain.blockscout.com/address/0x0899213428E3eF7f1D590e37BF8363E19Cc27f4e) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
-| RewardDistributor — S | [`0xD339d220bb30603e66cf15394657C9cAaC97274E`](https://robinhoodchain.blockscout.com/address/0xD339d220bb30603e66cf15394657C9cAaC97274E) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
-| RewardDistributor — M | [`0x30654838D2f3F3Ba475dd53a24Ce3aed3d4280DE`](https://robinhoodchain.blockscout.com/address/0x30654838D2f3F3Ba475dd53a24Ce3aed3d4280DE) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
-| RewardDistributor — L | [`0x9C8DDe98a6b09fD484eBFB74C2A016148B0D7378`](https://robinhoodchain.blockscout.com/address/0x9C8DDe98a6b09fD484eBFB74C2A016148B0D7378) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
-| RewardRouterV2 — S | [`0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0`](https://robinhoodchain.blockscout.com/address/0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
-| RewardRouterV2 — M | [`0x95420DdB175A1550f5fC66Ca5847352B53b6E0cA`](https://robinhoodchain.blockscout.com/address/0x95420DdB175A1550f5fC66Ca5847352B53b6E0cA) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
-| RewardRouterV2 — L | [`0x366c7f855d9bc013da3F9aC10C98b3F4EF7A5Ed8`](https://robinhoodchain.blockscout.com/address/0x366c7f855d9bc013da3F9aC10C98b3F4EF7A5Ed8) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
-| OlpQueue — S | [`0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16`](https://robinhoodchain.blockscout.com/address/0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
-| OlpQueue — M | [`0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2`](https://robinhoodchain.blockscout.com/address/0x95D1013be04e2D7da6C7E6e96fbC4dAE16Ee23F2) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
-| OlpQueue — L | [`0xF82fb623BEE693351bD7099Cc3650FBE46FB8349`](https://robinhoodchain.blockscout.com/address/0xF82fb623BEE693351bD7099Cc3650FBE46FB8349) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
+| RewardTracker | [`0x6b8979E1662a1e7524ecBBA625AA31cf87247Ea5`](https://robinhoodchain.blockscout.com/address/0x6b8979E1662a1e7524ecBBA625AA31cf87247Ea5) | [impl](https://robinhoodchain.blockscout.com/address/0x79AD98fA252D64A9095f83cc6FaF4243E0d01d48#code) |
+| RewardDistributor | [`0xD339d220bb30603e66cf15394657C9cAaC97274E`](https://robinhoodchain.blockscout.com/address/0xD339d220bb30603e66cf15394657C9cAaC97274E) | [impl](https://robinhoodchain.blockscout.com/address/0x6090cd3cb1c8d46471A600f363237D0E3b4388cb#code) |
+| RewardRouterV2 | [`0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0`](https://robinhoodchain.blockscout.com/address/0x0BA1292c9e205c0a12d926406b0ab5bc3EF879f0) | [impl](https://robinhoodchain.blockscout.com/address/0x306Da5cfa8640a989684432f5b2BC9a27E216E80#code) |
+| OlpQueue | [`0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16`](https://robinhoodchain.blockscout.com/address/0xFC121FEaAAf0bEdc93E5Da7a9C7D161357C89e16) | [impl](https://robinhoodchain.blockscout.com/address/0xD959B771c5244d290072cD319FDdFe6aa7b2Ad66#code) |
 
 </details>
 
@@ -553,13 +537,13 @@ and real [Paxos USDG on Robinhood](#external-assets). There is no test-token fau
 for this mainnet flow. A wallet sending a deposit needs ETH for that transfer;
 the app's relay sponsors supported setup, trading and withdrawal operations.
 Execution still requires a valid session, live keepers/prices, an open market
-and sufficient liquidity in the pool serving the selected expiry.
+and sufficient liquidity in the shared pool.
 
 | Step | Action | Expected result |
 | --- | --- | --- |
 | 1. Connect | Open [robin.callput.app](https://robin.callput.app), confirm **Robinhood** in the chain selector and choose **Connect**. Complete the Deposit & Trade account setup and session authorization prompts. | The app shows your **CallPut Account**, distinct from your connected wallet. |
 | 2. Deposit | Choose **Deposit**. Transfer Robinhood USDG from your wallet, or send it to the displayed CallPut Account deposit address on the same network. | After confirmation, the account's available balance updates. |
-| 3. Open | Select BTC or ETH, an unexpired market, and an enabled vertical spread (for example, Buy Call Spread). Choose two strikes and an amount within the displayed balance and liquidity limits; review and submit. Start with an expiry served by the funded S pool. | The request is accepted, then executed by a keeper. An accepted request is not yet a filled position. |
+| 3. Open | Select BTC or ETH, an unexpired market, and an enabled vertical spread (for example, Buy Call Spread). Choose two strikes and an amount within the displayed balance and liquidity limits; review and submit. | The request is accepted, then executed by a keeper. An accepted request is not yet a filled position. |
 | 4. Verify | Wait for the position to appear, then inspect its execution transaction on Blockscout. | The account receives an ERC-1155 OptionsToken balance with the selected underlying, expiry and strategy. |
 | 5. Close or settle | Close an executable position before expiry, or wait for expiry and its settlement price, then choose **Settle**. | The position balance decreases; any resulting USDG is credited to the CallPut Account. |
 | 6. Withdraw | Choose **Withdraw**, check the receiver on Robinhood, and authorize with the owner wallet. | Confirmed USDG arrives at the receiver; a trading session key cannot authorize this withdrawal. |

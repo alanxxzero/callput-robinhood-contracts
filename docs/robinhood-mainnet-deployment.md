@@ -1,5 +1,10 @@
 # Robinhood mainnet deployment
 
+This is the historical 2026-10-01 bootstrap inventory, including legacy
+contracts. The current service uses one shared USDG liquidity pool (`S_VAULT`);
+other vault deployments in this record are not offered as trading pools.
+For current functionality and access, see the [README](../README.md#implementation-and-deployment-status).
+
 Deployed on chain **4663** with **236 successful transactions**: 198 bootstrap
 transactions, 2 oracle-upgrade transactions and 36 stock-token creations.
 Bootstrap checks passed at block **77336947**, oracle checks at **77364304** and
